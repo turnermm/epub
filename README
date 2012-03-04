@@ -1,0 +1,6 @@
+Currently under development, epub will be a plugin for creating ebooks on Dokuwiki sites.  The 
+digital books created with this plugin will be formatted using EPUB, the open XML-based eBook format
+described at http://idpf.org/epub and supported by current ebook readers.
+
+
+
