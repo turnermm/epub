@@ -212,6 +212,10 @@ NAVPOINT;
             io_mkdir_p($meta);
 			io_mkdir_p($oebps);			
 			io_mkdir_p($media_dir);
+		     if(isset($_POST['client'])) {
+				  $user= rawurldecode($_POST['client']) . '/';				  
+				  io_mkdir_p($media_dir. '/'. $user);
+			  }
 			 
 			copy(EPUB_DIR . 'scripts/package/my-book.epub', $dir . 'my-book.epub');
 			copy(EPUB_DIR . 'scripts/package/container.xml', $dir . 'META-INF/container.xml');			
@@ -225,18 +229,23 @@ NAVPOINT;
 			$spine[] = $page;
 			
 		}	
-		function epub_pack_book() {
+		function epub_pack_book() {		  
+		     $user = "";
+		     if(isset($_POST['client'])) {
+				  $user= rawurldecode($_POST['client']) . '/';
+			  }
 		    $meta = epub_get_metadirectory() ;
 			chdir($meta);
 			$cmd =  'zip -Xr9Dq my-book.epub *';
 			exec($cmd);
-			$media_dir = epub_get_data_media() . 'epub/';
+			$media_dir = epub_get_data_media() . 'epub/' . $user;			
 			$oldname = $meta . 'my-book.epub';	        
 			$epub_file = strtolower(date("Y_F_j_h-i-s") ) . '.epub';
 			$newname = $media_dir .  $epub_file;
 
 			if(rename ($oldname , $newname )) {
-			   echo "New Ebook: epub:$epub_file\n" ;
+			   if($user) $user= str_replace('/',':',$user);
+			   echo "New Ebook: epub:" . $user . "$epub_file\n" ;
 			}
 		}	 
 		
