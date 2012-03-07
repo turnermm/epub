@@ -227,10 +227,8 @@
 			
 			return '<img src="' . $img . '"' .  "$h $w " . ' alt="'. $img . '" class="media" />';
 		}
-		
-		function _test () {
-			echo "here\n";
-		}
+	
+
 		/**
 			* no obfuscation for email addresses
 		*/

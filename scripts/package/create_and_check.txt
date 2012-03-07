@@ -1,6 +1,0 @@
-﻿create:
- zip -0Xq  my-book.epub mimetype
-zip -Xr9Dq my-book.epub *
-
-check:
-java -jar epubcheck.jar my-book.epub
