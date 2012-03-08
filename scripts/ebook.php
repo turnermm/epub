@@ -94,17 +94,20 @@
 	}	
 	
 
-			$epub_ids = 'introduction;;v06;;abc123;;features;;index:site_inx'; //media;;configuration';
+			$epub_ids = 'introduction;;v06;;features;;index:site_inx';
 			if(isset ($_POST['epub_ids'])) $epub_ids = rawurldecode($_POST['epub_ids']);
 			$epub_pages =  explode(';;',$epub_ids) ;
 		
-	   	    epub_setup_book_skel() ;
+	   	    epub_setup_book_skel() ;			
 			epub_opf_header();
 	
 			foreach($epub_pages as $page) {			  
 			    $creator = new epub_creator();
 				if($creator->create($page)) {
-				echo "processed: $page \n";
+				   if(isset ($_POST['epub_ids']))
+				        echo rawurlencode("processed: $page \n");
+				   else 
+				      echo "processed: $page \n";		
 				}
 			}
 
@@ -114,7 +117,10 @@
 			epub_write_spine();
 			epub_write_footer();
 			epub_write_ncx();
-			epub_pack_book();
+			epub_finalize_zip() ;
+		    epub_pack_book();
+		
+		
 			
 			//echo str_replace("[","<br />[",print_r($_POST,true));			
 			

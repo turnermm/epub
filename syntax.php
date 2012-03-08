@@ -76,9 +76,11 @@
 						$files = explode("\n",$match);
 					}
 					else $files = explode(',',$match);
-					for($i=0;$i<count($files);$i++) {
-						$file=trim($files[$i]);
-						$file=trim($file,'/');		
+					for($i=0;$i<count($files);$i++) {					      
+	                    $file = trim($files[$i],'][');
+		                list($file,$rest) = explode('|',$file);	
+						$file=trim($file);
+						$file=trim($file,'/');							 		
 						if(!$file) continue;				   						
 						$renderer->doc .= "epub_id[$i]='" . str_replace('/',':',$file) . "';\n"	;			  
 					}
