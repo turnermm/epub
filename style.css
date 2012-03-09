@@ -1,0 +1,9 @@
+﻿
+.mf_epub {
+    background-image: url(epub.png);
+}
+
+a.mf_epub {
+    background-image: url(epub.png) !important;
+}
+ 
