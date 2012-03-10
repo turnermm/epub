@@ -92,7 +92,13 @@
 		
 			
 	}	
-	
+	       
+			if(!class_exists ('ZipArchive')) {        
+				if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+					echo "Windows systems require the ZipArchive extension for creating ebooks\n";
+					exit;
+				}
+			}
 
 			$epub_ids = 'introduction;;v06;;features;;index:site_inx';
 			if(isset ($_POST['epub_ids'])) $epub_ids = rawurldecode($_POST['epub_ids']);

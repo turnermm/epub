@@ -4,7 +4,9 @@
 			/**
 			utilities
 			*/
-
+	  /*
+	      Creates headers for both the .opf and .ncx files
+      */
 		function epub_opf_header() {
 			global $conf;	
 			$lang = $conf['lang'];
@@ -86,6 +88,12 @@ FOOTER;
 		 fclose($handle);
 	   }
 	   
+	   /**
+	       returns true if a page id is included among pages being processed for this ebook,
+		   otherwise false
+		   If a page id is included in the ebook then the Renderer will create a link to it for accesss
+		   from within the ebook, otherwise it will create a text version of the url
+	   */
 		function is_epub_pageid($id) {
 		    static $ep_ids;
 			if(!$ep_ids)  {	
@@ -130,6 +138,9 @@ FOOTER;
 			 
 	   }
 
+	     /*
+		    returns full path to the OEPBS directory
+		 */
    	   function epub_get_oebps() {
 	         static $dir;
 			 if(!$dir) {
@@ -139,6 +150,9 @@ FOOTER;
 			 
 	   }
 
+	     /**
+		    maintains the item id 
+		 */
 	    function epub_itemid() {
 		  static $num = 0;		    
 		     return 'item' . ++$num;
@@ -178,6 +192,9 @@ FOOTER;
 			 
 		 }
 		 
+		 /**
+		    Adds content.opf and toc.ncx to zip file and closes it
+		 */
 	    function epub_finalize_zip() {
 	        $zip = epub_zip_handle() ;
 		    if(!$zip)  return false;			
@@ -187,6 +204,11 @@ FOOTER;
 		    return true;
         }
 		
+		/**
+		    loads spine array and adds nav points to the ncx file
+			then outputs closing tags to ncx file.  The header to
+			ncx file is created in epub_opf_header()
+		*/
 		function epub_write_ncx() {
 		    $toc  = epub_get_oebps()  . 'toc.ncx';      
 			
@@ -217,7 +239,7 @@ NAVPOINT;
 		   
 		}
 		
-		
+		/* write data to opf file */
 	    function epub_opf_write($data=null) {
 		    static $opf_handle;
 			static $opf_content;
@@ -262,6 +284,7 @@ NAVPOINT;
 			}
 		}
 		
+		/* Creates array of files required for spine */
         function epub_push_spine($page=null) {
 		    static $spine = array();
 			if(!$page) return $spine;
