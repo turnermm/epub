@@ -26,10 +26,12 @@
 <dc:creator>$user</dc:creator>
 <dc:identifier id="$uniq_id">$url</dc:identifier>
 <dc:language>$lang</dc:language>
+ <meta name="cover" content="cover-image" />
 </metadata>
 <manifest>
 <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/> 
-
+ <item id="cover" href="title.html" media-type="application/xhtml+xml"/>
+ <item id="cover-image" href="cover.png" media-type="image/png"/>
 OUTP;
 			
 			$dir =  epub_get_metadirectory() .  'OEBPS/';
@@ -72,7 +74,8 @@ NCX;
 	 
 	    function epub_write_spine() {
 		    $items = epub_push_spine();
-			epub_opf_write('<spine toc="ncx">');	        
+			epub_opf_write('<spine toc="ncx">');	 
+			epub_opf_write('<itemref idref="cover" linear="no"/>');	 			    
 			foreach($items as $page) {
 	            epub_opf_write('<itemref idref="' . $page[1] . '" linear="yes"/>');
 			}
@@ -81,6 +84,9 @@ NCX;
 		
 		function epub_write_footer() {
 		$footer=<<<FOOTER
+  <guide>
+    <reference href="title.html" type="cover" title="Cover"/>
+  </guide>		
 </package>
 FOOTER;
 	     epub_opf_write($footer);
@@ -218,7 +224,7 @@ FOOTER;
 		        exit;
 	        }  
 		    $items = epub_push_spine();
-			
+			array_unshift($items,'title.html');
             $num = 0;
 			foreach($items as $page) {
 			    $num++;
@@ -263,7 +269,7 @@ NAVPOINT;
 		}
 		
 		
-	    function epub_setup_book_skel() {
+	    function epub_setup_book_skel($user_title=false) {
 		    $dir=epub_get_metadirectory();
 		    $meta = $dir . 'META-INF';
 		    $oebps = epub_get_oebps(); 
@@ -277,10 +283,16 @@ NAVPOINT;
 			  }
 			
 			copy(EPUB_DIR . 'scripts/package/my-book.epub', $dir . 'my-book.epub');
-			copy(EPUB_DIR . 'scripts/package/container.xml', $dir . 'META-INF/container.xml');					
+			copy(EPUB_DIR . 'scripts/package/container.xml', $dir . 'META-INF/container.xml');	
+			copy(EPUB_DIR . 'scripts/package/title.html', $oebps . 'title.html');								
+			copy(EPUB_DIR . 'scripts/package/cover.png', $oebps . 'cover.png');								
 		    $zip = epub_zip_handle($dir . 'my-book.epub');
 			if($zip) {
 			    $zip->addFile(EPUB_DIR . 'scripts/package/container.xml', 'META-INF/container.xml');
+				if(!$user_title) {
+					$zip->addFile(EPUB_DIR . 'scripts/package/title.html', 'OEBPS/title.html');				
+					$zip->addFile(EPUB_DIR . 'scripts/package/cover.png', 'OEBPS/cover.png');								
+				}
 			}
 		}
 		

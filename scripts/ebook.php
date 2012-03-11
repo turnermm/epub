@@ -11,7 +11,7 @@
 	
 	class epub_creator {
 		private $_renderer;
-		function create($id) {
+		function create($id, $user_title=false) {
 			
 			ob_start();
 			
@@ -24,9 +24,7 @@
 				exit;
 			}
 					
-			
-			//  $id = ':example';
-			global $ID;
+		
 			$id = $id;
 			$wiki_file = wikiFN($id);
 			if(!file_exists($wiki_file)) {
@@ -81,6 +79,10 @@
 			ob_end_flush();
 			$id = str_replace(':', '@', $id) . '.html';
 			io_saveFile(epub_get_oebps() .$id,$result);
+			if($user_title) {				
+			    epub_write_zip($url);
+				return;
+			}
 			$item_num=epub_write_item($id, "application/xhtml+xml");
 			epub_push_spine(array($id,$item_num));
 			return true;
@@ -104,12 +106,13 @@
 			if(isset ($_POST['epub_ids'])) $epub_ids = rawurldecode($_POST['epub_ids']);
 			$epub_pages =  explode(';;',$epub_ids) ;
 		
-	   	    epub_setup_book_skel() ;			
+		    $epub_user_title = $epub_ids[0] == 'title' ? true: false;
+	   	    epub_setup_book_skel($epub_user_title) ;			
 			epub_opf_header();
 	
 			foreach($epub_pages as $page) {			  
 			    $creator = new epub_creator();
-				if($creator->create($page)) {
+				if($creator->create($page,$epub_user_title)) {
 				   if(isset ($_POST['epub_ids']))
 				        echo rawurlencode("processed: $page \n");
 				   else 
