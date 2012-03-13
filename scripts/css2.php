@@ -6,9 +6,10 @@
  * @author     Andreas Gohr <andi@splitbrain.org>
  */
 
-if(!defined('DOKU_INC')) define('DOKU_INC',dirname(__FILE__).'/../../');
+if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../../../').'/');	
 if(!defined('NOSESSION')) define('NOSESSION',true); // we do not use a session or authentication here (better caching)
 if(!defined('DOKU_DISABLE_GZIP_OUTPUT')) define('DOKU_DISABLE_GZIP_OUTPUT',1); // we gzip ourself here
+if(!defined('EPUB_DIR')) define('EPUB_DIR',realpath(dirname(__FILE__).'/../').'/');		
 require_once(DOKU_INC.'inc/init.php');
 
 
@@ -49,16 +50,26 @@ function epub_css_out($path){
     // Array of needed files and their web locations, the latter ones
     // are needed to fix relative paths in the stylesheets
     $files   = array();
-    // load template styles
-    if (isset($tplstyles[$mediatype])) {
+    
+	      $files[DOKU_INC.'lib/styles/style.css'] = DOKU_BASE.'lib/styles/';
+        // load plugin, template, user styles
+        $files = array_merge($files, css_pluginstyles('screen'));
+        if (isset($tplstyles['screen'])) $files = array_merge($files, $tplstyles['screen']);
+        if($lang['direction'] == 'rtl'){
+            if (isset($tplstyles['rtl'])) $files = array_merge($files, $tplstyles['rtl']);
+        }
+        if(isset($config_cascade['userstyle']['default'])){
+            $files[$config_cascade['userstyle']['default']] = DOKU_BASE;
+        }
+     if (isset($tplstyles[$mediatype])) {
         $files = array_merge($files, $tplstyles[$mediatype]);
-    }
-
+     }
+/*
     // load user styles
     if(isset($config_cascade['userstyle'][$mediatype])){
         $files[$config_cascade['userstyle'][$mediatype]] = DOKU_BASE;
     }
- 
+ */
     // load files
     foreach($files as $file => $location){
         $css .= css_loadfile($file, $location);
@@ -137,6 +148,27 @@ function css_moveimports($css)
     return $imports.$newCss;
 }
 
+function css_pluginstyles($mode='screen'){
+    global $lang;
+    $list = array();
+    $plugins = plugin_list();
+    foreach ($plugins as $p){
+        if($mode == 'all'){
+            $list[DOKU_PLUGIN."$p/all.css"]  = DOKU_BASE."lib/plugins/$p/";
+        }elseif($mode == 'print'){
+            $list[DOKU_PLUGIN."$p/print.css"]  = DOKU_BASE."lib/plugins/$p/";
+        }elseif($mode == 'feed'){
+            $list[DOKU_PLUGIN."$p/feed.css"]  = DOKU_BASE."lib/plugins/$p/";
+        }else{
+            $list[DOKU_PLUGIN."$p/style.css"]  = DOKU_BASE."lib/plugins/$p/";
+            $list[DOKU_PLUGIN."$p/screen.css"] = DOKU_BASE."lib/plugins/$p/";
+        }
+        if($lang['direction'] == 'rtl'){
+            $list[DOKU_PLUGIN."$p/rtl.css"] = DOKU_BASE."lib/plugins/$p/";
+        }
+    }
+    return $list;
+}
 
-
+//echo epub_css_out(EPUB_DIR);
 //Setup VIM: ex: et ts=4 :
