@@ -158,21 +158,22 @@
 			}
 			
 			
-			
 			if(strpos($link['class'],'wikilink') !== false ) {  //internal link	
 				$orig = "";
 				$name = $this->local_name($link,$orig);			
 				if(!$this->is_epubid($orig)) {		    
 					$doku_base = DOKU_BASE;
 					$doku_base = trim($doku_base,'/');		
-					$out = $link['name'] . ' (URL: ' . DOKU_URL . $doku_base  . "?id=$orig)";
-					//echo "$out\n";
+					$out = $link['name'] . ' (URL: ' . DOKU_URL . $doku_base  . "?id=$orig)";					
 					return $out;
 				}
 				$name .='.html';
 			}
 			else if($type=='media') {  //internal media
-				$name = $this->local_name($link); 	
+				$orig = "";				
+				$name = $this->local_name($link,$orig);					    
+				return  preg_replace('/<a\s+href=.*?>(.*?)<\/a>/',"$1",$link['name']) . ' (URL: ' . DOKU_URL . $doku_base  . "lib/exe/fetch.php?media=" . $orig.")";						
+				
 			}
 			elseif($link['class'] != 'media') {   //  or urlextern	or samba share or . . .		
 			   if($link['name']  == $link['url']) return $link['url'];

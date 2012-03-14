@@ -7,7 +7,7 @@
 	  /*
 	      Creates headers for both the .opf and .ncx files
       */
-		function epub_opf_header() {
+		function epub_opf_header($user_title) {
 			global $conf;	
 			$lang = $conf['lang'];
 			$user= rawurldecode($_POST['user']);
@@ -16,7 +16,9 @@
 			
 			$title=rawurldecode($_POST['title']); 
 			$uniq_id = str_replace('/','', DOKU_BASE) . "_id";
-			
+           if(!$user_title) {			
+               $cover_png='<item id="cover-image" href="cover.png" media-type="image/png"/>';
+            }
 			$outp = <<<OUTP
 <?xml version='1.0' encoding='utf-8'?>
 <package xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" 
@@ -31,7 +33,7 @@
 <manifest>
 <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/> 
  <item id="cover" href="title.html" media-type="application/xhtml+xml"/>
- <item id="cover-image" href="cover.png" media-type="image/png"/>
+ $cover_png
 OUTP;
 			
 			$dir =  epub_get_metadirectory() .  'OEBPS/';
@@ -223,12 +225,12 @@ FOOTER;
 		        echo "unable to open file: $toc\n";
 		        exit;
 	        }  
-		    $items = epub_push_spine();
-			array_unshift($items,'title.html');
+		    $items = epub_push_spine();			
+			array_unshift($items,array('title.html'));
             $num = 0;
 			foreach($items as $page) {
-			    $num++;
-				$page = $page[0];			
+			    $num++;				
+			    $page = $page[0];	
 				$navpoint=<<<NAVPOINT
  <navPoint id="np-$num" playOrder="$num">
   <navLabel>
@@ -284,8 +286,10 @@ NAVPOINT;
 			
 			copy(EPUB_DIR . 'scripts/package/my-book.epub', $dir . 'my-book.epub');
 			copy(EPUB_DIR . 'scripts/package/container.xml', $dir . 'META-INF/container.xml');	
-			copy(EPUB_DIR . 'scripts/package/title.html', $oebps . 'title.html');								
-			copy(EPUB_DIR . 'scripts/package/cover.png', $oebps . 'cover.png');								
+			if(!$user_title) {
+			    copy(EPUB_DIR . 'scripts/package/title.html', $oebps . 'title.html');								
+			    copy(EPUB_DIR . 'scripts/package/cover.png', $oebps . 'cover.png');								
+			}
 		    $zip = epub_zip_handle($dir . 'my-book.epub');
 			if($zip) {
 			    $zip->addFile(EPUB_DIR . 'scripts/package/container.xml', 'META-INF/container.xml');

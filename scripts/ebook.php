@@ -80,8 +80,8 @@
 			$id = str_replace(':', '@', $id) . '.html';
 			io_saveFile(epub_get_oebps() .$id,$result);
 			if($user_title) {				
-			    epub_write_zip($url);
-				return;
+			    epub_write_zip($id);
+				return true;
 			}
 			$item_num=epub_write_item($id, "application/xhtml+xml");
 			epub_push_spine(array($id,$item_num));
@@ -106,13 +106,19 @@
 			if(isset ($_POST['epub_ids'])) $epub_ids = rawurldecode($_POST['epub_ids']);
 			$epub_pages =  explode(';;',$epub_ids) ;
 		
-		    $epub_user_title = $epub_ids[0] == 'title' ? true: false;
+		    $epub_user_title = $epub_pages[0] == 'title' ? true: false;
 	   	    epub_setup_book_skel($epub_user_title) ;			
-			epub_opf_header();
-	
+			epub_opf_header($epub_user_title);
+            if($epub_user_title) {
+			    $creator = new epub_creator();
+			    $creator->create($epub_pages[0], $epub_user_title);
+				array_shift($epub_pages);
+				echo "processed: title \n";
+            }
+			
 			foreach($epub_pages as $page) {			  
 			    $creator = new epub_creator();
-				if($creator->create($page,$epub_user_title)) {
+				if($creator->create($page)) {
 				   if(isset ($_POST['epub_ids']))
 				        echo rawurlencode("processed: $page \n");
 				   else 
