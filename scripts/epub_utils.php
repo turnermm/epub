@@ -166,6 +166,54 @@ FOOTER;
 		     return 'item' . ++$num;
 		}
 		
+        function epub_fn() {
+		    static $num = 0;		    
+		    return ++$num;
+		}
+       function epub_close_footnotes() {
+	         $handle = epub_footnote_handle(true);
+			 if(!$handle) return;
+		     $item_num=epub_write_item('footnotes.html', "application/xhtml+xml");
+			 epub_push_spine(array('footnotes.html',$item_num));
+			 fwrite($handle,"\n</div></body></html>");		
+	   }
+	   
+        function epub_write_footnote($fn_id,$page,$url) {
+            static $handle;
+			static $current_page="";
+			if(!$handle)  {
+			    $handle = epub_footnote_handle();
+				epub_write_fn_header($handle);
+			}
+			if($current_page != $page) {
+			fwrite($handle,"<br/><h1>$page</h1>\n");
+			}
+			$footnote = "<a href='$page#backto_$fn_id' class='wikilink1' title='$page'>[$fn_id]</a> $url<br />\n";
+			fwrite($handle,$footnote);
+			$current_page=$page;
+		}
+		
+		function epub_write_fn_header($handle) {
+$header=<<<HEADER
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="stylesheet"  type="text/css" href="style.css"/>
+<title>Footnotes</title></head><body>
+<div class='dokuwiki'>
+HEADER;
+                fwrite($handle,$header);		
+		}
+		
+		function epub_footnote_handle($return_only=false) {
+		    static $handle;
+			if($return_only) return $handle;
+			if(!$handle) {
+			    $oebps = epub_get_oebps();
+				$handle=fopen($oebps. 'footnotes.html', 'a');
+			}
+			return $handle;
+		}
+		
 	    function epub_write_item($url,$mime_type) {
 		   $item_num = epub_itemid() ;
 		    $item='<item href="' . $url .'" id="' . $item_num  . '" media-type="' . $mime_type . '" />'; 
@@ -225,7 +273,7 @@ FOOTER;
 		        echo "unable to open file: $toc\n";
 		        exit;
 	        }  
-		    $items = epub_push_spine();			
+		    $items = epub_push_spine();
 			array_unshift($items,array('title.html'));
             $num = 0;
 			foreach($items as $page) {

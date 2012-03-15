@@ -14,6 +14,7 @@
 	class renderer_plugin_epub extends Doku_Renderer_xhtml {
 		private $opf_handle;		
 		private $oebps;
+		private $current_page;
 		
 		function getInfo() {
 			return array(
@@ -38,6 +39,9 @@
 		
 		function set_oebps() {
 		   $this->oebps = epub_get_oebps(); 
+		}
+        function set_current_page($page) {
+		   $this->current_page=$page;
 		}
 		
 		function opf_handle() {
@@ -163,21 +167,21 @@
 				$name = $this->local_name($link,$orig);			
 				if(!$this->is_epubid($orig)) {		    
 					$doku_base = DOKU_BASE;
-					$doku_base = trim($doku_base,'/');		
-					$out = $link['name'] . ' (URL: ' . DOKU_URL . $doku_base  . "?id=$orig)";					
-					return $out;
+					$doku_base = trim($doku_base,'/');							
+					$fnote =  DOKU_URL . $doku_base  . "?id=$orig";	
+					return $this->set_footnote($link,$fnote);
 				}
 				$name .='.html';
 			}
 			else if($type=='media') {  //internal media
 				$orig = "";				
-				$name = $this->local_name($link,$orig);					    
-				return  preg_replace('/<a\s+href=.*?>(.*?)<\/a>/',"$1",$link['name']) . ' (URL: ' . DOKU_URL . $doku_base  . "lib/exe/fetch.php?media=" . $orig.")";						
-				
+				$name = $this->local_name($link,$orig);			
+			   $note_url =  DOKU_URL . $doku_base  . "lib/exe/fetch.php?media=" . $orig;
+				return $this->set_footnote($link,$note_url);
 			}
-			elseif($link['class'] != 'media') {   //  or urlextern	or samba share or . . .		
-			   if($link['name']  == $link['url']) return $link['url'];
-				return   $link['name']  . ' ['. $link['url']  . ']';
+			elseif($link['class'] != 'media') {   //  or urlextern	or samba share or . . .					
+			   if(trim($link['name'])  == trim($link['url'])) return $link['url'];
+			   return $this->set_footnote($link,trim($link['url']));			
 			}
 			
 			if(!$name) return;
@@ -185,6 +189,18 @@
 
 			return parent::_formatLink($link);
 		}
+		
+         function set_footnote($link, $note_url="") {
+ 					$out = $link['name'];
+					$fn_id = epub_fn();
+					$link['name'] = "[$fn_id]";
+					$link['url'] = 'footnotes.html';					
+					$hash_link='<a name="backto_' . $fn_id . '">';
+					$out .= $hash_link . parent::_formatLink($link) . '</a>';
+					epub_write_footnote($fn_id,$this->current_page,$note_url);
+					return $out;
+
+         }
 		
 		function local_name($link,&$orig="") {
 			$base_name= basename($link['url']);

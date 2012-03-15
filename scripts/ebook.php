@@ -18,6 +18,7 @@
 			$mode ='epub';
 			$Renderer =& plugin_load('renderer',$mode);	    
 			$Renderer->set_oebps() ;
+			$Renderer->set_current_page(str_replace(':', '@', $id) . '.html') ;
 			$this->_renderer = $Renderer;
             if(is_null($Renderer)){
                 msg("No renderer for $mode found",-1);  
@@ -125,7 +126,11 @@
 				      echo "processed: $page \n";		
 				}
 			}
-
+			
+            if(epub_footnote_handle(true)) {			
+				epub_close_footnotes();
+			}
+			
 			epub_css(); 
 			epub_write_item('style.css',"text/css");
 			epub_opf_write('</manifest>');
