@@ -7,6 +7,7 @@
 	
 	class syntax_plugin_epub extends DokuWiki_Syntax_Plugin {
 		protected $title;
+		private $helper;
 		function getInfo() {
 			return array(
             'author' => 'Myron Turner',
@@ -32,17 +33,18 @@
 			$this->Lexer->addExitPattern('</epub>','plugin_epub');
 			
 		}
+		function __construct() {
+		    $this->helper =& plugin_load('helper', 'epub');
+		}
+		function handle($match, $state, $pos, &$handler) {		 
 		
-		function handle($match, $state, $pos, &$handler) {
-			
 			switch ($state) {		
 				case DOKU_LEXER_ENTER :       		  
 				$title =  substr($match, 6, -1);  
 				if($title)
 				$this->title = $title;
 				else 
-				$this->title="Dokuwiki EBook";
-				
+				$this->title="Dokuwiki EBook";			
 				return array($state, trim($title));          
 				
 				case DOKU_LEXER_UNMATCHED :				  
@@ -57,13 +59,16 @@
 		}
 		
 		function render($mode, &$renderer, $data) {
-			
+			global $INFO;
+
 			if($mode == 'xhtml'){
 				
 				list($state, $match) = $data;
 				
 				switch ($state) {
 					case DOKU_LEXER_ENTER :
+
+				    $this->helper->writeCache($INFO['id']);
 					$renderer->doc .= '<div>';
 					break;
 					
@@ -106,6 +111,7 @@
 		
 		function write_debug($what) {  
 			return;
+	       if(is_array($what))   $what = print_r($what,true);
 			$handle = fopen('epub.txt', 'a');
 			fwrite($handle,"$what\n");
 			fclose($handle);

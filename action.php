@@ -32,10 +32,11 @@
 			global $ID;
 			global $USERINFO;
 			if(!isset($USERINFO)) return;
-			$user = $USERINFO['name'];
-			
+			$user = $USERINFO['name'];			
 			global $ACT;
 			global $INFO;
+			$helper = $this->loadHelper('epub', true);
+			if (!$helper->is_inCache($INFO['id']))  return;   
 			if(strpos($INFO['id'],'epub') === false) return;
 			$wiki_file = wikiFN($INFO['id']);
 			if(!@file_exists($wiki_file)) return;
@@ -46,10 +47,20 @@
 			
 			$client=$INFO['client'];
    
-       $button_name = "Start"; //$this->getLang('btn_generate');
+       $button_name = $this->getLang('button_start'); //"Start"; //$this->getLang('btn_generate');
        $button="<form class='button'>";
-       $button .= "<div class='no' id='show_throbberbutton'><input type='button' value='$button_name' class='button' title='start'  onclick=\"_epub_show_throbber('$user','$client');\"/></div></form>";     
+       $button .= "<div class='no' id='show_throbberbutton'><input type='button' value='$button_name' class='button' title='start'  onclick=\"_epub_show_throbber('$user','$client');\"/>";
+       $button .="&nbsp;&nbsp;";
+	   $button .=    $this->getLang('label_start');   //"Click the Start Button to Create your eBook";
+	   $button .="</div></form>";     
        echo $button;
+       $id = $INFO['id'];
+       $button_name = $this->getLang('button_remove');
+       $button="<p><form class='button'>";       
+       $button .= "<div class='no' id='epub_remove_button'><input type='button' value='$button_name' class='button' title='start'  onclick=\"epub_remove_creator('$id');\"/></div></form>";
+	   $button .= '</br>'. $this->locale_xhtml('remove') . '</p>'; 	   
+       echo $button;
+
 		}
 		
 		function write_debug($what) {  

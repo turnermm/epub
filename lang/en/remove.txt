@@ -1,0 +1,6 @@
+﻿You can re-create this book, by editing its pages or changing the page list or the order of the pages, etc.  
+When you are finished with this book, however, you should remove its id from the list of book creator pages.  
+You do this by clicking on the above button: **Remove page from creator list**.  This will free the page id for other uses. 
+Unless you do this, the page will continue to display the **Start** and  **Remove page. .  .** buttons, 
+even if you have removed the epub syntax from the page.
+

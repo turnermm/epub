@@ -1,4 +1,5 @@
-﻿function epub_show_throbber(user,client) {
+﻿
+function epub_show_throbber(user,client) {
 		
 	var dom = document.getElementById('epub_throbber');  
 	if(!dom || !user || !epub_title) return;
@@ -34,6 +35,20 @@
 	//epub_wikilink
 	//epub_id
 }
+
+function epub_remove_creator(id) {
+    var params="remove="+encodeURIComponent(id);
+	jQuery.post(
+    DOKU_BASE + 'lib/plugins/epub/scripts/update_files.php',
+    params,
+    function (data) {       	
+alert(data);
+	},
+    'html'
+	);
+
+}
+
 
 function _epub_show_throbber(user,client) {
 	      epub_show_throbber(user,client);
