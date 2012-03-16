@@ -42,7 +42,7 @@ function epub_remove_creator(id) {
     DOKU_BASE + 'lib/plugins/epub/scripts/update_files.php',
     params,
     function (data) {       	
-alert(data);
+    alert(data);
 	},
     'html'
 	);
