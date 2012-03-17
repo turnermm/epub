@@ -221,6 +221,10 @@
 		function copy_media($media,$external=false) {
 			
 			$name =  str_replace(':','@',basename($media));		
+			$mime_type = mimetype($name);
+			list($type,$ext) = explode('/', $mime_type[1] );
+			if($type !== 'image') return;
+			
 			$file = $this->oebps . $name;
 		
 			if(file_exists($file)) return $name;
@@ -228,8 +232,7 @@
 				$media = mediaFN($media);
 			}
 			
-			if(copy ($media ,  $file)) {
-				$mime_type = mimetype($name);
+			if(copy ($media ,  $file)) {			
 				epub_write_item($name,$mime_type[1]) ;
 				return $name;
 			}
