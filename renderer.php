@@ -161,8 +161,7 @@
 				return $this->set_image($name);
 			}
 			
-			
-			if(strpos($link['class'],'wikilink') !== false ) {  //internal link	
+			if((strpos($link['class'],'wikilink') !== false ) && $type!='media') {  //internal link	
 				$orig = "";
 				$name = $this->local_name($link,$orig);			
 				if(!$this->is_epubid($orig)) {		    
@@ -198,6 +197,7 @@
 					$fn_id = epub_fn();
 					$link['name'] = "[$fn_id]";
 					$link['url'] = 'footnotes.html';					
+					$link['class'] = 'wikilink1';
 					$hash_link='<a name="backto_' . $fn_id . '">';
 					$out .= $hash_link . parent::_formatLink($link) . '</a>';
 					epub_write_footnote($fn_id,$this->current_page,$note_url);
