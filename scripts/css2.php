@@ -51,9 +51,10 @@ function epub_css_out($path){
     // are needed to fix relative paths in the stylesheets
     $files   = array();
     
-	      $files[DOKU_INC.'lib/styles/style.css'] = DOKU_BASE.'lib/styles/';
+      $files[DOKU_INC.'lib/styles/style.css'] = DOKU_BASE.'lib/styles/';
         // load plugin, template, user styles
         $files = array_merge($files, css_pluginstyles('screen'));
+        $files = array_merge($files, css_pluginstyles('all'));
         if (isset($tplstyles['screen'])) $files = array_merge($files, $tplstyles['screen']);
         if($lang['direction'] == 'rtl'){
             if (isset($tplstyles['rtl'])) $files = array_merge($files, $tplstyles['rtl']);
@@ -64,12 +65,12 @@ function epub_css_out($path){
      if (isset($tplstyles[$mediatype])) {
         $files = array_merge($files, $tplstyles[$mediatype]);
      }
-/*
+
     // load user styles
     if(isset($config_cascade['userstyle'][$mediatype])){
         $files[$config_cascade['userstyle'][$mediatype]] = DOKU_BASE;
     }
- */
+ 
     // load files
     foreach($files as $file => $location){
         $css .= css_loadfile($file, $location);
