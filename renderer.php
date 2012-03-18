@@ -176,8 +176,11 @@
 			else if($type=='media') {  //internal media
 				$orig = "";				
 				$name = $this->local_name($link,$orig);			
-			   $note_url =  DOKU_URL . $doku_base  . "lib/exe/fetch.php?media=" . $orig;
-				return $this->set_footnote($link,$note_url);
+			    $note_url =  DOKU_URL . $doku_base  . "lib/exe/fetch.php?media=" . $orig;
+                $link['class'] = 'wikilink1';
+				$out = $this->set_footnote($link,$note_url);
+				$out=preg_replace('/<a\s+href=\'\'>(.*?)<\/a>(?=<a)/',"$1",$out);		//remove link markup from link name					
+				return $out;			   				
 			}
 			elseif($link['class'] != 'media') {   //  or urlextern	or samba share or . . .					
 			   if(trim($link['name'])  == trim($link['url'])) return $link['url'];
