@@ -388,7 +388,7 @@ NAVPOINT;
 		    static $installed_plugins;
 			if(!$installed_plugins) {
 		  	    $installed_plugins=plugin_list('syntax');
-			   // echo print_r($installed_plugins,true) . "\n";
+			  // echo print_r($installed_plugins,true) . "\n";
 			}	
 			 if(in_array($which, $installed_plugins)) return true;
 			 return false;
@@ -424,3 +424,19 @@ NAVPOINT;
 				
 			}			
 		}
+		
+	    function epub_check_for_include(&$text) {
+		    $regex = '#\{\{page>(.*?)\}\}#m';			
+			if(!preg_match_all($regex,$text,$matches)) return;		
+		    $text= preg_replace_callback($regex, 'epub_replace_include', $text);
+		}	
+		
+		function epub_replace_include($matches) {		   	 
+			 list($id,$rest) = explode('&',$matches[1]);			 
+ 			$wiki_file = wikiFN($id);
+			if(!file_exists($wiki_file)) {			
+				 return "";
+			}
+			$text=io_readFile($wiki_file);
+			return "\n$text\n";
+		}	

@@ -33,6 +33,9 @@
 				 return false;
 			}
 			$text=io_readFile($wiki_file);
+			if(epub_is_installed_plugin('include_include') ) {
+			   epub_check_for_include($text);
+			}
 			$instructions = p_get_instructions($text);
 			if(is_null($instructions)) return '';
 			
