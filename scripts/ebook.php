@@ -61,7 +61,10 @@
 			trigger_event('RENDERER_CONTENT_POSTPROCESS',$data);
 			
 			$xhtml = $Renderer->doc;
-			$result .= $xhtml;
+			if(epub_is_installed_plugin('ditaa')) {
+			    epub_check_for_ditaa($xhtml,$Renderer) ;
+			}			
+			$result .= $xhtml;			
 			$result .= "\n</div></body></html>\n";		
 			$result =  preg_replace_callback("/&(\w+);/m", "epbub_entity_replace", $result );  				
 			$result = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/m", "\n", $result);	
@@ -103,7 +106,7 @@
 				}
 			}
 
-			$epub_ids = 'introduction;;v06;;features;;index:site_inx';
+			$epub_ids = 'ditaa:win_filebrowser'; //introduction;;v06;;features;;index:site_inx';
 			if(isset ($_POST['epub_ids'])) $epub_ids = rawurldecode($_POST['epub_ids']);
 			$epub_pages =  explode(';;',$epub_ids) ;
 		

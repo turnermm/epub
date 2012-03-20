@@ -274,6 +274,7 @@ HEADER;
 		        exit;
 	        }  
 		    $items = epub_push_spine();
+
 			array_unshift($items,array('title.html'));
             $num = 0;
 			foreach($items as $page) {
@@ -383,3 +384,43 @@ NAVPOINT;
 			}
 		}	 
 		
+		function epub_is_installed_plugin($which) {
+		    static $installed_plugins;
+			if(!$installed_plugins) {
+		  	    $installed_plugins=plugin_list('syntax');
+			   // echo print_r($installed_plugins,true) . "\n";
+			}	
+			 if(in_array($which, $installed_plugins)) return true;
+			 return false;
+		}
+		
+		function epub_check_for_ditaa(&$xhtml,$renderer) {
+	
+		    if(strpos($xhtml,"ditaa/img.php") === false)  return;	
+			$regex = '#<img src=\"(.*?ditaa.*?)\".*\/>#m';	
+			
+			if(!preg_match_all($regex,$xhtml,$matches,PREG_SET_ORDER)) return;
+			$plugin = plugin_load('syntax','ditaa');
+			
+			for($i=0; $i<count($matches); $i++ ) {
+ 		        list($url,$params) = explode('?',$matches[$i][1]);				
+				// parse the query string
+			    $params = explode('&amp;',$params);		
+				
+			    $data = array();
+			    foreach($params as $param) {
+			        list($key,$val) = explode('=',$param);
+			       $data[$key]=$val;
+		        }		
+                $cache  = $plugin->_imgfile($data);  // get the image address in data/cache						
+			    if($cache) {
+			        $name=$renderer->copy_media($cache,true);		//copy the image to epub's OEBPS directory and enter it into opf file		    
+				    if($name) {
+				     	$regex = '#<img src=\"(.*?' . $data['md5'] . '.*?)\".*\/>#m';	// use the ditaa  plugin's md5 identifier to replace correct image	
+					    $replace = '<img src="' . $name . '" />';							
+					    $xhtml = preg_replace($regex,$replace,$xhtml);
+				    }
+			    }	
+				
+			}			
+		}
