@@ -442,7 +442,7 @@ NAVPOINT;
             if($hash) {
                 $text = "";
                 $header = str_replace('_', ' ', $hash);
-				echo "Include '$id#$header'\n";
+                //echo "Include '$id#$header'\n";
                 $regex = "#(=+)\s*$header#i";
                 $level = 0;
                 $lines = file($wiki_file);
