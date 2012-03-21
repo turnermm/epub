@@ -167,7 +167,7 @@
 				if(!$this->is_epubid($orig)) {		    
 					$doku_base = DOKU_BASE;
 					$doku_base = trim($doku_base,'/');							
-					$fnote =  DOKU_URL . $doku_base  . "?id=$orig";	
+					$fnote =  DOKU_URL .  "?id=$orig";	
 					return $this->set_footnote($link,$fnote);
 				}
 				$name .='.html';
@@ -175,7 +175,7 @@
 			else if($type=='media') {  //internal media
 				$orig = "";				
 				$name = $this->local_name($link,$orig);			
-			    $note_url =  DOKU_URL . $doku_base  . "lib/exe/fetch.php?media=" . $orig;
+			    $note_url =  DOKU_URL .  "lib/exe/fetch.php?media=" . $orig;
                 $link['class'] = 'wikilink1';
 				$out = $this->set_footnote($link,$note_url);
 				$out=preg_replace('/<a\s+href=\'\'>(.*?)<\/a>(?=<a)/',"$1",$out);		//remove link markup from link name					
