@@ -187,8 +187,8 @@ FOOTER;
 			}
 			if($current_page != $page) {
 			fwrite($handle,"<br/><h1>$page</h1>\n");
-			}
-			$footnote = "<a href='$page#backto_$fn_id' class='wikilink1' title='$page'>[$fn_id]</a> $url<br />\n";
+			}			
+			$footnote = "<a href='$page#backto_$fn_id' class='wikilink1' title='$page'>[$fn_id]</a> <a href='$url'>$url</a><br />\n";
 			fwrite($handle,$footnote);
 			$current_page=$page;
 		}
