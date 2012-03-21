@@ -431,12 +431,39 @@ NAVPOINT;
 		    $text= preg_replace_callback($regex, 'epub_replace_include', $text);
 		}	
 		
-		function epub_replace_include($matches) {		   	 
-			 list($id,$rest) = explode('&',$matches[1]);			 
- 			$wiki_file = wikiFN($id);
-			if(!file_exists($wiki_file)) {			
-				 return "";
-			}
-			$text=io_readFile($wiki_file);
-			return "\n$text\n";
-		}	
+       function epub_replace_include($matches) {
+            list($id,$rest) = explode('&',$matches[1]);
+            list($id,$hash) = explode('#',$id);
+            $wiki_file = wikiFN($id);
+            if(!file_exists($wiki_file)) {
+                return "";
+            }
+			
+            if($hash) {
+                $text = "";
+                $header = str_replace('_', ' ', $hash);
+				echo "Include '$id#$header'\n";
+                $regex = "#(=+)\s*$header#i";
+                $level = 0;
+                $lines = file($wiki_file);
+
+                foreach($lines as $line) {
+                    if(!$text && preg_match($regex,$line,$matches)) {
+                         $text = $line;
+                         $level= strlen($matches[1]);
+                         continue;
+                    }
+                   if($level && strpos($line,'=') !==false) {
+                          preg_match('#(=+)#',$line,$matches);
+                          if(strlen($matches[1]) >= $level) break;
+                    }
+                    if($level)     $text .= $line;
+                }
+            }
+            else {
+                $text=io_readFile($wiki_file);
+            }
+
+            return "\n$text\n";
+        }
+		
