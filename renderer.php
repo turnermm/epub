@@ -167,7 +167,7 @@
 				if(!$this->is_epubid($orig)) {		    
 					$doku_base = DOKU_BASE;
 					$doku_base = trim($doku_base,'/');							
-					$fnote =  DOKU_URL .  "?id=$orig";	
+					$fnote =  DOKU_URL .  "doku.php?id=$orig";	
 					return $this->set_footnote($link,$fnote);
 				}
 				$name .='.html';
