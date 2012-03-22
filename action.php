@@ -22,7 +22,9 @@
 			* Register callbacks
 		*/
 		function register($controller) { 
+			$controller->register_hook( 'TPL_METAHEADER_OUTPUT', 'AFTER', $this, 'loadScript');
 			$controller->register_hook('TPL_ACT_RENDER', 'AFTER', $this, 'get_epub');
+			$controller->register_hook('TPL_ACT_RENDER', 'BEFORE', $this, 'check_scriptLoaded');
 		}
 		
 		/**
@@ -63,6 +65,37 @@
 
 		}
 		
+    function loadScript(&$event) {
+    echo <<<SCRIPT
+    <script type="text/javascript">
+    //<![CDATA[
+    function epub_LoadScript( url )
+    {
+     document.write( '<scr' + 'ipt type="text/javascript" src="' + url + '"><\/scr' + 'ipt>' ) ;
+    }
+//]]>
+  </script>
+SCRIPT;
+    }
+
+    function check_scriptLoaded(&$event) {	
+   $url = DOKU_URL . 'lib/plugins/epub/script.js';
+    echo <<<SCRIPT
+    <script type="text/javascript">
+    //<![CDATA[
+
+      if(!window._epub_show_throbber){	  
+        epub_LoadScript("$url");
+      }
+
+    //]]>
+
+    </script>
+SCRIPT;
+
+	
+    }
+
 		function write_debug($what) {  
 			return;
 			$what = print_r($what,true);
