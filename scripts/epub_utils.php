@@ -17,7 +17,7 @@
 			$title=rawurldecode($_POST['title']); 
 			$uniq_id = str_replace('/','', DOKU_BASE) . "_id";
            if(!$user_title) {			
-               $cover_png='<item id="cover-image" href="cover.png" media-type="image/png"/>';
+               $cover_png='<item id="cover-image" href="cover.png" media-type="image/png"/>'. "\n";
             }
 			$outp = <<<OUTP
 <?xml version='1.0' encoding='utf-8'?>
