@@ -28,7 +28,7 @@
 		}
 		
 		/**
-			* Handle PARSER_CACHE_USE:BEFORE event
+	
 		*/
 		function get_epub($event, $param) {
 			global $ID;
