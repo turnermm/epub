@@ -64,9 +64,6 @@
 			trigger_event('RENDERER_CONTENT_POSTPROCESS',$data);
 			
 			$xhtml = $Renderer->doc;
-			if(epub_is_installed_plugin('ditaa')) {
-			    epub_check_for_ditaa($xhtml,$Renderer) ;
-			}			
 			$result .= $xhtml;			
 			$result .= "\n</div></body></html>\n";		
 			$result =  preg_replace_callback("/&(\w+);/m", "epbub_entity_replace", $result );  				

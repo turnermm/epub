@@ -251,6 +251,25 @@
 			return '<img src="' . $img . '"' .  "$h $w " . ' alt="'. $img . '" class="media" />';
 		}
 	
+        function plugin($name,$data) {		
+		
+		    if($name !='mathpublish' && $name !='ditaa') return parent::plugin($name,$data);
+		    $mode ='xhtml';
+		    $renderer =p_get_renderer($mode );		
+            $plugin =& plugin_load('syntax',$name);
+            if($plugin != null) {			
+                $plugin->render($mode,$renderer,$data);
+	            
+		        if($name == 'ditaa') {
+			        epub_check_for_ditaa($renderer->doc,$this);					    
+                }
+				else if($name =='mathpublish') {
+					
+					epub_check_for_math($renderer->doc,$this);					
+				}
+				$this->doc .= $renderer->doc;
+		    }
+        }
 
 		/**
 			* no obfuscation for email addresses

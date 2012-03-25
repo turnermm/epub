@@ -425,6 +425,22 @@ NAVPOINT;
 			}			
 		}
 		
+		function epub_check_for_math(&$xhtml,$renderer) {
+		    $regex='#mathpublish\/img.php\?img=([a-f0-9]+)\"#';
+			
+		
+			if(preg_match($regex,$xhtml,$matches)) {
+				
+				 $cache = getcachename($matches[1], '.mathpublish.png');
+				 $name=$renderer->copy_media($cache,true);
+			
+				 $name = 'src="' . $name . '" ' ;
+				 $regex = '#src\s*=.*?mathpublish\/img.php\?img=([a-f0-9]+)\"#';
+				 $xhtml = preg_replace($regex, $name ,$xhtml );
+				
+			}
+		}	
+		
 	    function epub_check_for_include(&$text) {
 		    $regex = '#\{\{page>(.*?)\}\}#m';			
 			if(!preg_match_all($regex,$text,$matches)) return;		
