@@ -86,7 +86,10 @@
 		                list($file,$rest) = explode('|',$file);	
 						$file=trim($file);
 						$file=trim($file,'/');							 		
-						if(!$file) continue;				   						
+						if(!$file) continue;				  
+ 						if(!auth_quickaclcheck($file)) { 							
+							continue;
+						}	
 						$renderer->doc .= "epub_id[$i]='" . str_replace('/',':',$file) . "';\n"	;			  
 					}
 					
