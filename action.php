@@ -42,7 +42,7 @@
 			if(strpos($INFO['id'],'epub') === false) return;
 			$wiki_file = wikiFN($INFO['id']);
 			if(!@file_exists($wiki_file)) return;
-			if(isset($ACT) && ($ACT == 'edit'||$ACT == 'admin'||$ACT == 'index')) return;
+			if(isset($ACT) && ($ACT == 'edit'||$ACT == 'admin'||$ACT == 'index' ||$ACT == 'media')) return;
 
 			$auth = auth_quickaclcheck('epub:*');
 			if($auth < 8) return;
