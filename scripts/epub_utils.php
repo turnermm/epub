@@ -369,8 +369,12 @@ NAVPOINT;
 			 if(!epub_zip_handle()) {
 			    chdir($meta);			 
 			    echo rawurlencode("*nix zip command used \n");
-			    $cmd =  'zip -Xr9Dq my-book.epub *';
-			    exec($cmd);
+			    $cmd =  'zip -Xr9Dq my-book.epub *';				
+			    exec($cmd,$ar, $ret);
+				if($ret > 0) {
+				   echo "zip error: exit status=$ret\n";
+				   echo "<b>Error codes:</b>\n  4: memory allocation error\n  11-18: unable write to or create file\n  127: zip command not found\n";
+				}
 			} 
 			else echo "ziparchive used\n";
 			$media_dir = epub_get_data_media() . 'epub/' . $user;			
