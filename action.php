@@ -38,7 +38,7 @@
 			global $ACT;
 			global $INFO;
 			
-            if($ACT != 'show') return;			 
+                        if($ACT != 'show') return;			 
 			$helper = $this->loadHelper('epub', true);
 			if (!$helper->is_inCache($INFO['id']))  return;   
 			if(strpos($INFO['id'],'epub') === false) return;
