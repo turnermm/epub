@@ -43,8 +43,10 @@
 			if(strpos($INFO['id'],'epub') === false) return;
 			$wiki_file = wikiFN($INFO['id']);
 			if(!@file_exists($wiki_file)) return;
+            $epub_group = $this->getConf('group');
+            $groups=$USERINFO['grps'];
 			$auth = auth_quickaclcheck('epub:*');
-			if($auth < 8) return;
+			if($auth < 8 && !in_array($epub_group,$groups)) return;
 			
 			$client=$INFO['client'];
    
