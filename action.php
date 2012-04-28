@@ -39,14 +39,16 @@
 			global $INFO;
 			if($ACT != 'show') return;			 
 			$helper = $this->loadHelper('epub', true);
-			if (!$helper->is_inCache($INFO['id']))  return;   
+			if (!$helper->is_inCache($INFO['id']))  return;  //cache set in syntax.php 
 			if(strpos($INFO['id'],'epub') === false) return;
 			$wiki_file = wikiFN($INFO['id']);
 			if(!@file_exists($wiki_file)) return;
-            $epub_group = $this->getConf('group');
-            $groups=$USERINFO['grps'];
+	                $epub_group = $this->getConf('group');
+        		$groups=$USERINFO['grps'];
 			$auth = auth_quickaclcheck('epub:*');
 			if($auth < 8 && !in_array($epub_group,$groups)) return;
+			$auth = auth_quickaclcheck($INFO['id']);
+			if($auth < 4) return;
 			
 			$client=$INFO['client'];
    
