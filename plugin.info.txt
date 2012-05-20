@@ -1,7 +1,7 @@
 base epub
 author Myron Turner
 email turnermm02@shaw.ca
-date 2011-05-16
+date 2012-03-22
 name epub
 desc Ebook creator 
 url http://www.dokuwiki.org/plugin:epub
