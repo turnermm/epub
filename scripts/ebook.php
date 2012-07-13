@@ -81,10 +81,16 @@
                             );
 
 			ob_end_flush();
-			$id = str_replace(':', '@', $id) . '.html';
-			io_saveFile(epub_get_oebps() .$id,$result);
+            if($user_title) {
+                $id = 'title.html';
+            }
+		    else {
+               $id = str_replace(':', '@', $id) . '.html';
+               }
+			    io_saveFile(epub_get_oebps() .$id,$result);
+            
 			if($user_title) {				
-			    epub_write_zip($id);
+			    epub_write_zip('title.html');
 				return true;
 			}
 			$item_num=epub_write_item($id, "application/xhtml+xml");
@@ -110,7 +116,7 @@
 			if(isset ($_POST['epub_ids'])) $epub_ids = rawurldecode($_POST['epub_ids']);
 			$epub_pages =  explode(';;',$epub_ids) ;
 		
-		    $epub_user_title = $epub_pages[0] == 'title' ? true: false;
+            $epub_user_title = strpos($epub_pages[0], 'title') !== false ? true: false;
 	   	    epub_setup_book_skel($epub_user_title) ;			
 			epub_opf_header($epub_user_title);
             if($epub_user_title) {

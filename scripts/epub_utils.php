@@ -216,7 +216,12 @@ HEADER;
 		
 	    function epub_write_item($url,$mime_type) {
 		   $item_num = epub_itemid() ;
-		    $item='<item href="' . $url .'" id="' . $item_num  . '" media-type="' . $mime_type . '" />'; 
+           if(strpos($url, 'cover.png') !== false)  {
+               $item='<item  href="' . $url .'" id="cover-image" media-type="' . $mime_type . '" />'; 
+           }
+		    else {
+              $item='<item href="' . $url .'" id="' . $item_num  . '" media-type="' . $mime_type . '" />'; 
+            }  
 		    epub_opf_write($item);
 			epub_write_zip($url);
 			return $item_num;
@@ -381,7 +386,7 @@ NAVPOINT;
 			$oldname = $meta . 'my-book.epub';	        
 			$epub_file = strtolower(date("Y_F_j_h-i-s") ) . '.epub';
 			$newname = $media_dir .  $epub_file;
-
+            
 			if(rename ($oldname , $newname )) {
 			   if($user) $user= str_replace('/',':',$user);
 			   echo "New Ebook: epub:" . $user . "$epub_file\n" ;
