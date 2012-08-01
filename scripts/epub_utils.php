@@ -492,3 +492,21 @@ NAVPOINT;
             return "\n$text\n";
         }
 		
+        function epub_checkfor_ns($name, &$pages) {        
+            $name = rtrim($name);
+           
+            $n = strrpos($name,'*',-1);
+            if(!$n) return;
+       
+            $ns = wikiFN($name);
+            list($dir,$rest) = explode('.', $ns);                        
+            $paths = glob("$dir/*.txt");
+            $pages = array();
+            $ns = rtrim($name,'*');
+            foreach ($paths as $path) {
+                 $pages[] = $ns . basename($path, '.txt');  
+            }
+            echo "Found following pages in $name namespace: \n";
+            print_r($pages);
+            
+        }
