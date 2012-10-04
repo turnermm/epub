@@ -332,6 +332,7 @@ NAVPOINT;
 			$media_dir = epub_get_data_media() . 'epub';
             io_mkdir_p($meta);
 			io_mkdir_p($oebps);			
+            io_mkdir_p($oebps . 'images/');			
 			io_mkdir_p($media_dir);
 		     if(isset($_POST['client'])) {
 				  $user= rawurldecode($_POST['client']) . '/';				  
