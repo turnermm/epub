@@ -181,7 +181,7 @@
 				$out=preg_replace('/<a\s+href=\'\'>(.*?)<\/a>(?=<a)/',"$1",$out);		//remove link markup from link name					
 				return $out;			   				
 			}
-			elseif($link['class'] != 'media') {   //  or urlextern	or samba share or . . .							
+			elseif($link['class'] != 'media') {   //  or urlextern	or samba share or . . .					
 			   return $this->set_footnote($link,trim($link['url']));			
 			}
 			
@@ -226,22 +226,17 @@
 			$mime_type = mimetype($name);
 			list($type,$ext) = explode('/', $mime_type[1] );
 			if($type !== 'image') return;
+			
+			$file = $this->oebps . $name;
 		
-			$file = $this->oebps .'images/' . $name;
-		
-			if(file_exists($file)) {
-            if(strpos($file, 'images/') !== false) {
-                return $name;
-            }
-             else  return 'images/' . $name;
-            }
+			if(file_exists($file)) return $name;
 			if(!$external) {
 				$media = mediaFN($media);
 			}
 			
 			if(copy ($media ,  $file)) {			
-				epub_write_item('images/' . $name,$mime_type[1]) ;
-				return 'images/' .$name;
+				epub_write_item($name,$mime_type[1]) ;
+				return $name;
 			}
 			return false;
 		}
