@@ -182,7 +182,6 @@
 				return $out;			   				
 			}
 			elseif($link['class'] != 'media') {   //  or urlextern	or samba share or . . .					
-			   if(trim($link['name'])  == trim($link['url'])) return $link['url'];
 			   return $this->set_footnote($link,trim($link['url']));			
 			}
 			
