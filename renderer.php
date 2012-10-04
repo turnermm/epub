@@ -229,7 +229,7 @@
 		
 			$file = $this->oebps .'images/' . $name;
 		
-			if(file_exists($file)) return $name;
+			if(file_exists($file)) return 'images/' . $name;
 			if(!$external) {
 				$media = mediaFN($media);
 			}
