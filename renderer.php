@@ -73,14 +73,14 @@
 		$height=NULL, $cache=NULL, $render = true) {
 			$mtype = mimetype($src);
 			if(!$title) $title = $src;
-			
+		
 			$src = $this->copy_media($src);
 			
 			if($align == 'center'){
 				$out .= '<div align="center" style="text-align: center">';
 			}
-			if(strpos($mtype[1],'image') !== false)       {	   
-				$out .= $this->set_image($src,$width,$height);
+			if(strpos($mtype[1],'image') !== false)       {	             
+				$out .= $this->set_image($src,$width,$height);                
 			}
 			else {		 		 
 				$out .= "<a href='$src'>$title</a>";
@@ -204,17 +204,29 @@
 
          }
 		
+        function smiley($smiley) {
+            static $smileys;            
+             if(!$smileys) $smileys = getSmileys();
+             
+             if ( array_key_exists($smiley, $this->smileys) ) {
+                 $spath = DOKU_INC . 'lib/images/smileys/'.$smileys[$smiley];
+                 $name = $this->copy_media($spath,true);
+                 $this->doc .= $this->_media($name);
+             } 
+         }        
+        
 		function local_name($link,&$orig="") {
 			$base_name= basename($link['url']);
 			$title = $link['title']? ltrim($link['title'],':'): "";
-			if($name) {
+            if ($title) {
+               $name = $title;
+             }  
+			elseif($base_name) {
 				list($name,$rest) = explode('?',$base_name);
-				$name=ltrim($name,':');
-				if($title && ($name != $title)) $name = $title;
 			}
-			else if ($title) $name = $title;
+		
 			if($name) {
-				$orig = ltrim($name,':');
+				$orig = ltrim($name,':');               
 				return str_replace(':','@',$name);
 			}
 			return false;
