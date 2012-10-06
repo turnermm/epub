@@ -131,6 +131,7 @@
                 array_unshift($epub_titles, 'Title Page');
             }
             epub_checkfor_ns($epub_pages[0],$epub_pages, $epub_titles);      
+            array_push($epub_titles,"Footnotes");
             epub_titlesStack($epub_titles);
             $page_num = 0;
             foreach($epub_pages as $page) {			  
