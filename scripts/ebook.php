@@ -29,6 +29,7 @@
 			$id = $id;
 			$wiki_file = wikiFN($id);
 			if(!file_exists($wiki_file)) {
+                 epub_push_spine(array("",""));
 			     echo "$id not found\n";
 				 return false;
 			}
@@ -111,21 +112,27 @@
                     exit;
                 }
             }
-            
+            //echo "Namespace: " . wikiFN('epub:*') . "\n";
             $epub_ids = 'ditaa:win_filebrowser'; //introduction;;v06;;features;;index:site_inx';
             if(isset ($_POST['epub_ids'])) $epub_ids = rawurldecode($_POST['epub_ids']);
+            if(isset ($_POST['epub_titles'])) $e_titles = rawurldecode($_POST['epub_titles']);
 			$epub_pages =  explode(';;',$epub_ids) ;
-            
+            $epub_titles = explode(';;',$e_titles) ;
             $epub_user_title = strpos($epub_pages[0], 'title') !== false ? true: false;
 	   	    epub_setup_book_skel($epub_user_title) ;			
             epub_opf_header($epub_user_title);
             if($epub_user_title) {
                 $creator = new epub_creator();
                 $creator->create($epub_pages[0], $epub_user_title);
-                array_shift($epub_pages);
-                echo "processed: title \n";
+                array_shift($epub_pages);             
+                echo "processed: title page \n";             
             }
-            epub_checkfor_ns($epub_pages[0],$epub_pages);        
+            else {
+                array_unshift($epub_titles, 'Title Page');
+            }
+            epub_checkfor_ns($epub_pages[0],$epub_pages, $epub_titles);      
+            epub_titlesStack($epub_titles);
+            $page_num = 0;
             foreach($epub_pages as $page) {			  
                 $creator = new epub_creator();
                 if($creator->create($page)) {
@@ -134,6 +141,8 @@
                         else  
                         echo "processed: $page \n";		
                 }
+                //else epub_titlesStack($page_num);
+                //$page_num++;
             }
 			
             if(epub_footnote_handle(true)) {			

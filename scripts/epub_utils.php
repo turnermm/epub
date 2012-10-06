@@ -128,7 +128,7 @@ FOOTER;
 					 $user=$temp_user?"$temp_user:$seed":$seed;
 				  }
 				  $dir = dirname(metaFN("epub:$user:tmp",'.meta')) . '/'; 
-				  echo "working directory: $dir\n";
+				  //echo "working directory: $dir\n";
 		    }
 				 
 		    return $dir;    
@@ -285,10 +285,13 @@ HEADER;
 			foreach($items as $page) {
 			    $num++;				
 			    $page = $page[0];	
+                $title=epub_titlesStack();
+                if(!$page) continue;
+              //  if($title) echo "found $title for $page\n";
 				$navpoint=<<<NAVPOINT
  <navPoint id="np-$num" playOrder="$num">
   <navLabel>
-	<text>$page</text>
+	<text>$title</text>
   </navLabel>
   <content src="$page"/>
 </navPoint>
@@ -324,7 +327,17 @@ NAVPOINT;
 	        return $opf_handle;		
 		}
 		
-		
+		function epub_titlesStack($titles=null) {
+            static $e_titles; 
+            if(is_array($titles)) {
+               $e_titles=$titles;               
+            } 
+            elseif(count($e_titles)) {
+                return array_shift($e_titles);   
+            }
+            return "";
+        }
+        
 	    function epub_setup_book_skel($user_title=false) {
 		    $dir=epub_get_metadirectory();
 		    $meta = $dir . 'META-INF';
@@ -493,21 +506,39 @@ NAVPOINT;
             return "\n$text\n";
         }
 		
-        function epub_checkfor_ns($name, &$pages) {        
+        function epub_checkfor_ns($name, &$pages, &$titles) {        
             $name = rtrim($name);
-           
+
             $n = strrpos($name,'*',-1);
             if(!$n) return;
+             array_shift($pages);  // remove namespace id:  namespace:*
        
             $ns = wikiFN($name);
             list($dir,$rest) = explode('.', $ns);                        
             $paths = glob("$dir/*.txt");
-            $pages = array();
+            
+             $_pages = array();
+             $_titles = array();
+            
             $ns = rtrim($name,'*');
             foreach ($paths as $path) {
-                 $pages[] = $ns . basename($path, '.txt');  
+                 $_pages[] = $ns . basename($path, '.txt');            
             }
-            echo "Found following pages in $name namespace: \n";
-            print_r($pages);
+            $title_page = array_shift($titles);        
+            array_shift($titles);    // remove namespace asterisk from titles list                
+
+            for ($i=0; $i<count($_pages); $i++) {
+               array_unshift ($pages , $_pages[$i]);
+               $_titles[$i] = basename($_pages[$i], '.txt');
+               $elems = explode(':',$_titles[$i] );              
+               $_titles[$i] = $elems[count($elems)-1];
+               $_titles[$i] = ucwords(str_replace('_',' ',$_titles[$i]));
+               array_unshift ($titles , $_titles[$i]);           
+            }
+            array_unshift($titles,$title_page);
             
+            echo "Found following pages in $name namespace: \n";
+            print_r($_pages);
+            echo "Created following titles: \n";
+            print_r($_titles);
         }

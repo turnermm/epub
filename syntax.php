@@ -91,6 +91,14 @@
 							continue;
 						}	
 						$renderer->doc .= "epub_id[$i]='" . str_replace('/',':',$file) . "';\n"	;			  
+                        $rest = trim($rest," ][");
+                        
+                        if(!$rest) { 
+                          $ar = explode(':',$file);
+                          $n = count($ar) -1;
+                          $rest = $ar[$n];
+                         }
+                         $renderer->doc .= "epub_wikilink[$i]='" . str_replace('/',':',$rest) . "';\n"	;			  
 					}
 					
 					$renderer->doc .= 'epub_title="' . $this->title . '";';
