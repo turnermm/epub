@@ -7,10 +7,8 @@
 	params += "&location="+encodeURIComponent(window.location);
 	params += "&title="+encodeURIComponent(epub_title);
 	
-	epub_id=epub_id.join(';;');
-	epub_id= epub_id.replace(/^;;/,"");
-	epub_ids= epub_id.replace(/;;$/,"");	
-	params+="&epub_ids="+encodeURIComponent(epub_id);
+	params+="&epub_ids="+epub_stringifyArray(epub_id);
+    params+="&epub_titles="+epub_stringifyArray(epub_wikilink);
 	
     if(client) {
 	params += "&client="+encodeURIComponent(client);		
@@ -33,6 +31,15 @@ function _epub_show_throbber(user,client) {
 		  dom.style.display='none';
 }	  
 
+function epub_remove_creator(id) {
+    var params="remove="+encodeURIComponent(id);
+  	var url =  DOKU_BASE + 'lib/plugins/epub/scripts/update_files.php';
+    epub_post(url,params,  function (data) {   	    
+           	            alert(data);
+	    }
+    );    
+}
+
 function epub_post(url,params,callback) {
      var s = new sack(url);
 	 s.onCompletion = function() {
@@ -42,3 +49,10 @@ function epub_post(url,params,callback) {
          };
 		s.runAJAX(params);	 
 }	
+
+function epub_stringifyArray(ar) {
+    ar=ar.join(';;');
+	ar= ar.replace(/^;;/,"");
+	ar= ar.replace(/;;$/,"");	
+    return encodeURIComponent(ar);
+}
