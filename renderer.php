@@ -79,7 +79,6 @@
             if(strpos($src,'http://') === 0) $external = true;
             if($external && !$this->allow_url_fopen)  {
                 $link = $this->create_external_link($src);
-                $this->set_footnote($link,trim($link['url']));	
                 return $this->_formatLink($link);                
             }
 			$src = $this->copy_media($src,$external);
