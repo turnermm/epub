@@ -73,8 +73,10 @@
 		$height=NULL, $cache=NULL, $render = true) {
 			$mtype = mimetype($src);
 			if(!$title) $title = $src;
-		
-			$src = $this->copy_media($src);
+		    $external = false;       
+            $src = trim($src);
+            if(strpos($src,'http://') === 0) $external = true;
+			$src = $this->copy_media($src,$external);
 			
 			if($align == 'center'){
 				$out .= '<div align="center" style="text-align: center">';
@@ -181,8 +183,8 @@
 				$out=preg_replace('/<a\s+href=\'\'>(.*?)<\/a>(?=<a)/',"$1",$out);		//remove link markup from link name					
 				return $out;			   				
 			}
-			elseif($link['class'] != 'media') {   //  or urlextern	or samba share or . . .					
-			   return $this->set_footnote($link,trim($link['url']));			
+			elseif($link['class'] != 'media') {   //  or urlextern	or samba share or . . .	
+			   return $this->set_footnote($link,trim($link['url']));		// creates an entry in output for the link  with a live footnote to the link	
 			}
 			
 			if(!$name) return;
@@ -215,30 +217,39 @@
              } 
          }        
         
-		function local_name($link,&$orig="") {
-			$base_name= basename($link['url']);
-			$title = $link['title']? ltrim($link['title'],':'): "";
+        function local_name($link,&$orig="") {
+            $base_name= basename($link['url']);
+            $title = $link['title']? ltrim($link['title'],':'): "";
             if ($title) {
-               $name = $title;
-             }  
-			elseif($base_name) {
-				list($name,$rest) = explode('?',$base_name);
-			}
-		
-			if($name) {
-				$orig = ltrim($name,':');               
-				return str_replace(':','@',$name);
-			}
-			return false;
-		}
-		
+                $name = $title;
+            }  
+            elseif($base_name) {
+                list($name,$rest) = explode('?',$base_name);
+            }
+
+            if($name) {
+                $orig = ltrim($name,':');               
+                return str_replace(':','@',$name);
+            }
+            return false;
+        }
+	
 		function copy_media($media,$external=false) {
-			
 			$name =  str_replace(':','@',basename($media));		
 			$mime_type = mimetype($name);
 			list($type,$ext) = explode('/', $mime_type[1] );
 			if($type !== 'image') return;
-			
+			if($external) {       
+                $tmp =  str_replace('http://',"",$media);
+                $tmp =  str_replace('www.',"",$tmp);
+                $tmp=ltrim($tmp,'/');
+                $elems=explode('/',$tmp);                       
+                if(count($elems && $elems[0])) {
+                    $elems[0] = preg_replace('#/\W#','@',$elems[0]);
+                    $name = $elems[0]. "@" . $name;
+                }
+            }
+           
 			$file = $this->oebps . $name;
 		
 			if(file_exists($file)) return $name;
@@ -252,7 +263,7 @@
 			}
 			return false;
 		}
-		
+	
 		function set_image($img,$width=null,$height=null) {
 			$w="";
 			$h="";
