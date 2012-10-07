@@ -15,7 +15,7 @@
 		private $opf_handle;		
 		private $oebps;
 		private $current_page;
-		
+		private $allow_url_fopen; 
 		function getInfo() {
 			return array(
             'author' => 'Myron Turner',
@@ -26,7 +26,8 @@
             'url'    => 'http://www.dokuwiki.org/plugin:epub');
 		}
 		
-		function __construct() {        
+		function __construct() {     
+            $this->allow_url_fopen=ini_get ( 'allow_url_fopen' ) ;
 		}
 		
 		/**
@@ -76,6 +77,11 @@
 		    $external = false;       
             $src = trim($src);
             if(strpos($src,'http://') === 0) $external = true;
+            if($external && !$this->allow_url_fopen)  {
+                $link = $this->create_external_link($src);
+                $this->set_footnote($link,trim($link['url']));	
+                return $this->_formatLink($link);                
+            }
 			$src = $this->copy_media($src,$external);
 			
 			if($align == 'center'){
@@ -96,6 +102,21 @@
 			return $out;
 		}
 		
+        function create_external_link($name) {
+            return array(
+                "target" => "",
+                "style" => "",
+                "pre" => "",
+                "suf" => "",
+                  "type"=>'ext_media',
+                "more" =>  'rel="nofollow"',
+                "class" => 'urlextern',
+                "url" => $name,
+                "name" => basename($name),
+                "title" => $name
+              );  
+        }
+        
 		/**
 			* hover info makes no sense in PDFs, so drop acronyms
 		*/
@@ -184,7 +205,11 @@
 				return $out;			   				
 			}
 			elseif($link['class'] != 'media') {   //  or urlextern	or samba share or . . .	
-			   return $this->set_footnote($link,trim($link['url']));		// creates an entry in output for the link  with a live footnote to the link	
+                $out = $this->set_footnote($link,trim($link['url']));		// creates an entry in output for the link  with a live footnote to the link	
+                if($link['type'] == 'ext_media') {
+                    $this->doc .= $out;
+                }
+                else return $out;			  
 			}
 			
 			if(!$name) return;
@@ -239,7 +264,8 @@
 			$mime_type = mimetype($name);
 			list($type,$ext) = explode('/', $mime_type[1] );
 			if($type !== 'image') return;
-			if($external) {       
+			if($external) {  
+                if(!$this->allow_url_fopen) return;
                 $tmp =  str_replace('http://',"",$media);
                 $tmp =  str_replace('www.',"",$tmp);
                 $tmp=ltrim($tmp,'/');
@@ -253,10 +279,10 @@
 			$file = $this->oebps . $name;
 		
 			if(file_exists($file)) return $name;
-			if(!$external) {
+			if(!$external) {            
 				$media = mediaFN($media);
 			}
-			
+		    
 			if(copy ($media ,  $file)) {			
 				epub_write_item($name,$mime_type[1]) ;
 				return $name;
