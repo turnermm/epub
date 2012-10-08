@@ -181,8 +181,12 @@
 				
 				$name = $this->copy_media($link['title']);
 				return $this->set_image($name);
-			}
-			
+			}            
+            elseif($link['class'] == 'media' && strpos($link['name'],'<img') !== false) {  
+                $this->doc .= '<a href="'  .  $link['url']  .'" class="media" title="' . $link['title'] . '"  rel="nofollow">' . $link['name'] . '</a>';
+                return;
+            }
+            
 			if((strpos($link['class'],'wikilink') !== false ) && $type!='media') {  //internal link	
 				$orig = "";
 				$name = $this->local_name($link,$orig);			
