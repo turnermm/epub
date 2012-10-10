@@ -1,5 +1,9 @@
 A plugin for creating ebooks on Dokuwiki sites.  The digital books created with this plugin are formatted using EPUB,
-the open XML-based eBook formatdescribed at http://idpf.org/epub and supported by current ebook readers.
+the open XML-based eBook format described at http://idpf.org/epub and supported by current ebook readers.
+
+For instructions on use see: https://www.dokuwiki.org/plugin:epub
+
+
 
 
 

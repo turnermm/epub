@@ -37,7 +37,9 @@
 		    $this->helper =& plugin_load('helper', 'epub');
 		}
 		function handle($match, $state, $pos, &$handler) {		 
-                        $match = str_replace(',','&#44;',$match);		
+            $match = str_replace(';','&#59;',$match);		  
+		    $match = str_replace(',','&#44;',$match);
+            
 			switch ($state) {		
 				case DOKU_LEXER_ENTER :       		  
 				$title =  substr($match, 6, -1);  
@@ -77,10 +79,9 @@
 					$renderer->doc .= "\n<SCRIPT  type='text/javascript'>\n//<![CDATA[\n" ;
 					
 					$renderer->doc .= "\nvar epub_wikilink = new Array();\nvar epub_id = new Array();\n";
-					if(!strpos($match,','))  {
-						$files = explode("\n",$match);
-					}
-					else $files = explode(',',$match);
+
+					$files = explode("\n",$match);
+
 					for($i=0;$i<count($files);$i++) {					      
 	                    $file = trim($files[$i],'][');
 		                list($file,$rest) = explode('|',$file);	
@@ -98,6 +99,7 @@
                           $n = count($ar) -1;
                           $rest = $ar[$n];
                          }
+                         $rest =  str_replace(':','&#58;',$rest);
                          $renderer->doc .= "epub_wikilink[$i]='" . str_replace('/',':',$rest) . "';\n"	;			  
 					}
 					
