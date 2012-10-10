@@ -37,7 +37,7 @@
 		    $this->helper =& plugin_load('helper', 'epub');
 		}
 		function handle($match, $state, $pos, &$handler) {		 
-		
+                        $match = str_replace(',','&#44;',$match);		
 			switch ($state) {		
 				case DOKU_LEXER_ENTER :       		  
 				$title =  substr($match, 6, -1);  
