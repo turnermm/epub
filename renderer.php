@@ -16,6 +16,7 @@
 		private $oebps;
 		private $current_page;
 		private $allow_url_fopen; 
+		private $isWin;
 		function getInfo() {
 			return array(
             'author' => 'Myron Turner',
@@ -27,7 +28,9 @@
 		}
 		
 		function __construct() {     
-            $this->allow_url_fopen=ini_get ( 'allow_url_fopen' ) ;
+            $this->allow_url_fopen=ini_get ( 'allow_url_fopen' ) ;			
+            $this->isWin=epub_isWindows();
+			
 		}
 		
 		/**
@@ -271,8 +274,15 @@
                 if(!$this->allow_url_fopen) return;
                 $tmp =  str_replace('http://',"",$media);
                 $tmp =  str_replace('www.',"",$tmp);
-                $tmp=ltrim($tmp,'/');
+				if($this->isWin) {
+				    $tmp =  preg_replace('/^[A-Z]:/',"",$tmp);
+				}
+                $tmp=ltrim($tmp,'/\/');
+                
                 $elems=explode('/',$tmp);                       
+				if($this->isWin) {
+				    $elems=explode('\\',$tmp);                       
+				}
                 if(count($elems && $elems[0])) {
                     $elems[0] = preg_replace('#/\W#','@',$elems[0]);
                     $name = $elems[0]. "@" . $name;

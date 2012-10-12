@@ -542,3 +542,7 @@ NAVPOINT;
             echo "Created following titles: \n";
             print_r($_titles);
         }
+		
+		function epub_isWindows() {  		
+		   return (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN');
+		}	
