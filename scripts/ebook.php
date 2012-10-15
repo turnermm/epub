@@ -22,13 +22,14 @@
 			$this->_renderer = $Renderer;
             if(is_null($Renderer)){
                 msg("No renderer for $mode found",-1);  
-				exit;
-			}
+                exit;
+            }
 					
 		
 			$id = $id;
 			$wiki_file = wikiFN($id);
 			if(!file_exists($wiki_file)) {
+                 epub_push_spine(array("",""));
 			     echo "$id not found\n";
 				 return false;
 			}
@@ -80,14 +81,14 @@
 										$result
                             );
 
-			ob_end_flush();
+            ob_end_flush();
             if($user_title) {
                 $id = 'title.html';
             }
-		    else {
-               $id = str_replace(':', '@', $id) . '.html';
+            else {
+            $id = str_replace(':', '@', $id) . '.html';
                }
-			    io_saveFile(epub_get_oebps() .$id,$result);
+             io_saveFile(epub_get_oebps() .$id,$result);
             
 			if($user_title) {				
 			    epub_write_zip('title.html');
@@ -105,49 +106,52 @@
 			
 	}	
 	       
-			if(!class_exists ('ZipArchive')) {        
-				if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-					echo "Windows systems require the ZipArchive extension for creating ebooks\n";
-					exit;
-				}
-			}
-
-			$epub_ids = 'ditaa:win_filebrowser'; //introduction;;v06;;features;;index:site_inx';
-			if(isset ($_POST['epub_ids'])) $epub_ids = rawurldecode($_POST['epub_ids']);
+           
+            // $epub_ids = 'ditaa:win_filebrowser;;introduction;;v06;;features;;index:site_inx';  
+            if(isset ($_POST['epub_ids'])) $epub_ids = rawurldecode($_POST['epub_ids']);
+            if(isset ($_POST['epub_titles'])) $e_titles = rawurldecode($_POST['epub_titles']);
 			$epub_pages =  explode(';;',$epub_ids) ;
-		
+            $epub_titles = explode(';;',$e_titles) ;
             $epub_user_title = strpos($epub_pages[0], 'title') !== false ? true: false;
 	   	    epub_setup_book_skel($epub_user_title) ;			
-			epub_opf_header($epub_user_title);
+            epub_opf_header($epub_user_title);
             if($epub_user_title) {
-			    $creator = new epub_creator();
-			    $creator->create($epub_pages[0], $epub_user_title);
-				array_shift($epub_pages);
-				echo "processed: title \n";
+                $creator = new epub_creator();
+                $creator->create($epub_pages[0], $epub_user_title);
+                array_shift($epub_pages);             
+                echo "processed: title page \n";             
             }
-			
-			foreach($epub_pages as $page) {			  
-			    $creator = new epub_creator();
-				if($creator->create($page)) {
-				   if(isset ($_POST['epub_ids']))
-				        echo rawurlencode("processed: $page \n");
-				   else 
-				      echo "processed: $page \n";		
-				}
-			}
+            else {
+                array_unshift($epub_titles, 'Title Page');
+            }
+            epub_checkfor_ns($epub_pages[0],$epub_pages, $epub_titles);      
+            array_push($epub_titles,"Footnotes");
+            epub_titlesStack($epub_titles);
+            $page_num = 0;
+            foreach($epub_pages as $page) {			  
+                $creator = new epub_creator();
+                if($creator->create($page)) {
+                if(isset ($_POST['epub_ids']))
+                    echo rawurlencode("processed: $page \n");
+                        else  
+                        echo "processed: $page \n";		
+                }
+                //else epub_titlesStack($page_num);
+                //$page_num++;
+            }
 			
             if(epub_footnote_handle(true)) {			
 				epub_close_footnotes();
 			}
 			
-			epub_css(); 
-			epub_write_item('style.css',"text/css");
-			epub_opf_write('</manifest>');
-			epub_write_spine();
-			epub_write_footer();
-			epub_write_ncx();
-			epub_finalize_zip() ;
-		    epub_pack_book();
+            epub_css(); 
+            epub_write_item('style.css',"text/css");
+            epub_opf_write('</manifest>');
+            epub_write_spine();
+            epub_write_footer();
+            epub_write_ncx();
+            epub_finalize_zip() ;
+            epub_pack_book();
 		
 		
 			

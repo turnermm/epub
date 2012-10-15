@@ -9,11 +9,9 @@ function epub_show_throbber(user,client) {
 	params += "&location="+encodeURIComponent(window.location);
 	params += "&title="+encodeURIComponent(epub_title);
 	
-	epub_id=epub_id.join(';;');
-	epub_id= epub_id.replace(/^;;/,"");
-	epub_ids= epub_id.replace(/;;$/,"");	
-	params+="&epub_ids="+encodeURIComponent(epub_id);
-	
+	params+="&epub_ids="+epub_stringifyArray(epub_id);
+    params+="&epub_titles="+epub_stringifyArray(epub_wikilink);
+   
     if(client) {
 	params += "&client="+encodeURIComponent(client);		
 	}
@@ -34,6 +32,13 @@ function epub_show_throbber(user,client) {
 	
 	//epub_wikilink
 	//epub_id
+}
+
+function epub_stringifyArray(ar) {
+    ar=ar.join(';;');
+	ar= ar.replace(/^;;/,"");
+	ar= ar.replace(/;;$/,"");	
+    return encodeURIComponent(ar);
 }
 
 function epub_remove_creator(id) {

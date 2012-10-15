@@ -15,7 +15,8 @@
 		private $opf_handle;		
 		private $oebps;
 		private $current_page;
-		
+		private $allow_url_fopen; 
+		private $isWin;
 		function getInfo() {
 			return array(
             'author' => 'Myron Turner',
@@ -26,7 +27,10 @@
             'url'    => 'http://www.dokuwiki.org/plugin:epub');
 		}
 		
-		function __construct() {        
+		function __construct() {     
+            $this->allow_url_fopen=ini_get ( 'allow_url_fopen' ) ;			
+            $this->isWin=epub_isWindows();
+			
 		}
 		
 		/**
@@ -73,14 +77,20 @@
 		$height=NULL, $cache=NULL, $render = true) {
 			$mtype = mimetype($src);
 			if(!$title) $title = $src;
-			
-			$src = $this->copy_media($src);
+		    $external = false;       
+            $src = trim($src);
+            if(strpos($src,'http://') === 0) $external = true;
+            if($external && !$this->allow_url_fopen)  {
+                $link = $this->create_external_link($src);
+                return $this->_formatLink($link);                
+            }
+			$src = $this->copy_media($src,$external);
 			
 			if($align == 'center'){
 				$out .= '<div align="center" style="text-align: center">';
 			}
-			if(strpos($mtype[1],'image') !== false)       {	   
-				$out .= $this->set_image($src,$width,$height);
+			if(strpos($mtype[1],'image') !== false)       {	             
+				$out .= $this->set_image($src,$width,$height);                
 			}
 			else {		 		 
 				$out .= "<a href='$src'>$title</a>";
@@ -94,6 +104,21 @@
 			return $out;
 		}
 		
+        function create_external_link($name) {
+            return array(
+                "target" => "",
+                "style" => "",
+                "pre" => "",
+                "suf" => "",
+                  "type"=>'ext_media',
+                "more" =>  'rel="nofollow"',
+                "class" => 'urlextern',
+                "url" => $name,
+                "name" => basename($name),
+                "title" => $name
+              );  
+        }
+        
 		/**
 			* hover info makes no sense in PDFs, so drop acronyms
 		*/
@@ -159,8 +184,12 @@
 				
 				$name = $this->copy_media($link['title']);
 				return $this->set_image($name);
-			}
-			
+			}            
+            elseif($link['class'] == 'media' && strpos($link['name'],'<img') !== false) {  
+                $this->doc .= '<a href="'  .  $link['url']  .'" class="media" title="' . $link['title'] . '"  rel="nofollow">' . $link['name'] . '</a>';
+                return;
+            }
+            
 			if((strpos($link['class'],'wikilink') !== false ) && $type!='media') {  //internal link	
 				$orig = "";
 				$name = $this->local_name($link,$orig);			
@@ -181,8 +210,12 @@
 				$out=preg_replace('/<a\s+href=\'\'>(.*?)<\/a>(?=<a)/',"$1",$out);		//remove link markup from link name					
 				return $out;			   				
 			}
-			elseif($link['class'] != 'media') {   //  or urlextern	or samba share or . . .					
-			   return $this->set_footnote($link,trim($link['url']));			
+			elseif($link['class'] != 'media') {   //  or urlextern	or samba share or . . .	
+                $out = $this->set_footnote($link,trim($link['url']));		// creates an entry in output for the link  with a live footnote to the link	
+                if($link['type'] == 'ext_media') {
+                    $this->doc .= $out;
+                }
+                else return $out;			  
 			}
 			
 			if(!$name) return;
@@ -204,43 +237,72 @@
 
          }
 		
-		function local_name($link,&$orig="") {
-			$base_name= basename($link['url']);
-			$title = $link['title']? ltrim($link['title'],':'): "";
-			if($name) {
-				list($name,$rest) = explode('?',$base_name);
-				$name=ltrim($name,':');
-				if($title && ($name != $title)) $name = $title;
-			}
-			else if ($title) $name = $title;
-			if($name) {
-				$orig = ltrim($name,':');
-				return str_replace(':','@',$name);
-			}
-			return false;
-		}
-		
+        function smiley($smiley) {
+            static $smileys;            
+             if(!$smileys) $smileys = getSmileys();
+             
+             if ( array_key_exists($smiley, $this->smileys) ) {
+                 $spath = DOKU_INC . 'lib/images/smileys/'.$smileys[$smiley];
+                 $name = $this->copy_media($spath,true);
+                 $this->doc .= $this->_media($name);
+             } 
+         }        
+        
+        function local_name($link,&$orig="") {
+            $base_name= basename($link['url']);
+            $title = $link['title']? ltrim($link['title'],':'): "";
+            if ($title) {
+                $name = $title;
+            }  
+            elseif($base_name) {
+                list($name,$rest) = explode('?',$base_name);
+            }
+
+            if($name) {
+                $orig = ltrim($name,':');               
+                return str_replace(':','@',$name);
+            }
+            return false;
+        }
+	
 		function copy_media($media,$external=false) {
-			
 			$name =  str_replace(':','@',basename($media));		
 			$mime_type = mimetype($name);
 			list($type,$ext) = explode('/', $mime_type[1] );
 			if($type !== 'image') return;
-			
+			if($external) {  
+                if(!$this->allow_url_fopen) return;
+                $tmp =  str_replace('http://',"",$media);
+                $tmp =  str_replace('www.',"",$tmp);
+				if($this->isWin) {
+				    $tmp =  preg_replace('/^[A-Z]:/',"",$tmp);
+				}
+                $tmp=ltrim($tmp,'/\/');
+                
+                $elems=explode('/',$tmp);                       
+				if($this->isWin) {
+				    $elems=explode('\\',$tmp);                       
+				}
+                if(count($elems && $elems[0])) {
+                    $elems[0] = preg_replace('#/\W#','@',$elems[0]);
+                    $name = $elems[0]. "@" . $name;
+                }
+            }
+           
 			$file = $this->oebps . $name;
 		
 			if(file_exists($file)) return $name;
-			if(!$external) {
+			if(!$external) {            
 				$media = mediaFN($media);
 			}
-			
+		    
 			if(copy ($media ,  $file)) {			
 				epub_write_item($name,$mime_type[1]) ;
 				return $name;
 			}
 			return false;
 		}
-		
+	
 		function set_image($img,$width=null,$height=null) {
 			$w="";
 			$h="";

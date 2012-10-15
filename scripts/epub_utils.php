@@ -128,7 +128,7 @@ FOOTER;
 					 $user=$temp_user?"$temp_user:$seed":$seed;
 				  }
 				  $dir = dirname(metaFN("epub:$user:tmp",'.meta')) . '/'; 
-				  echo "working directory: $dir\n";
+				  //echo "working directory: $dir\n";
 		    }
 				 
 		    return $dir;    
@@ -227,7 +227,7 @@ HEADER;
 			return $item_num;
 		}
 
-		 function epub_zip_handle($path=null) {
+		 function epub_zip_handle($path=null) {                    
 		    static $zip; 
 			if(!class_exists ('ZipArchive'))  return false;
 			if($path && !$zip) {
@@ -285,10 +285,13 @@ HEADER;
 			foreach($items as $page) {
 			    $num++;				
 			    $page = $page[0];	
+                $title=epub_titlesStack();
+                if(!$page) continue;
+              //  if($title) echo "found $title for $page\n";
 				$navpoint=<<<NAVPOINT
  <navPoint id="np-$num" playOrder="$num">
   <navLabel>
-	<text>$page</text>
+	<text>$title</text>
   </navLabel>
   <content src="$page"/>
 </navPoint>
@@ -324,7 +327,17 @@ NAVPOINT;
 	        return $opf_handle;		
 		}
 		
-		
+		function epub_titlesStack($titles=null) {
+            static $e_titles; 
+            if(is_array($titles)) {
+               $e_titles=$titles;               
+            } 
+            elseif(count($e_titles)) {
+                return array_shift($e_titles);   
+            }
+            return "";
+        }
+        
 	    function epub_setup_book_skel($user_title=false) {
 		    $dir=epub_get_metadirectory();
 		    $meta = $dir . 'META-INF';
@@ -332,6 +345,7 @@ NAVPOINT;
 			$media_dir = epub_get_data_media() . 'epub';
             io_mkdir_p($meta);
 			io_mkdir_p($oebps);			
+            io_mkdir_p($oebps . 'images/');			
 			io_mkdir_p($media_dir);
 		     if(isset($_POST['client'])) {
 				  $user= rawurldecode($_POST['client']) . '/';				  
@@ -370,8 +384,10 @@ NAVPOINT;
 			  }
 		    $meta = epub_get_metadirectory() ;
 			 
-			 
-			 if(!epub_zip_handle()) {
+			 if(!epub_zip_handle() && epub_isWindows()) {
+                epub_pack_ZipLib($meta);
+			 }
+			 elseif(!epub_zip_handle()) {
 			    chdir($meta);			 
 			    echo rawurlencode("*nix zip command used \n");
 			    $cmd =  'zip -Xr9Dq my-book.epub *';				
@@ -379,6 +395,8 @@ NAVPOINT;
 				if($ret > 0) {
 				   echo "zip error: exit status=$ret\n";
 				   echo "<b>Error codes:</b>\n  4: memory allocation error\n  11-18: unable write to or create file\n  127: zip command not found\n";
+                   echo "Trying ZipLib\n";
+                   epub_pack_ZipLib($meta);
 				}
 			} 
 			else echo "ziparchive used\n";
@@ -393,6 +411,19 @@ NAVPOINT;
 			}
 		}	 
 		
+        function epub_pack_ZipLib($meta) {
+			    chdir($meta);
+				echo	 rawurlencode("Using Dokuwiki's ZipLib Class\n");
+				$epub_file = $meta . 'my-book.epub';
+				unlink($epub_file);
+                $z = new ZipLib;
+                $z->add_File('application/epub+zip', 'mimetype', 0);
+                $z->Compress('OEBPS','./');
+                $z->Compress('META-INF','./');
+                $result = $z->get_file();
+                file_put_contents($epub_file,$result);        
+        }
+        
 		function epub_is_installed_plugin($which) {
 		    static $installed_plugins;
 			if(!$installed_plugins) {
@@ -492,3 +523,43 @@ NAVPOINT;
             return "\n$text\n";
         }
 		
+        function epub_checkfor_ns($name, &$pages, &$titles) {        
+            $name = rtrim($name);
+
+            $n = strrpos($name,'*',-1);
+            if(!$n) return;
+             array_shift($pages);  // remove namespace id:  namespace:*
+       
+            $ns = wikiFN($name);
+            list($dir,$rest) = explode('.', $ns);                        
+            $paths = glob("$dir/*.txt");
+            
+             $_pages = array();
+             $_titles = array();
+            
+            $ns = rtrim($name,'*');
+            foreach ($paths as $path) {
+                 $_pages[] = $ns . basename($path, '.txt');            
+            }
+            $title_page = array_shift($titles);        
+            array_shift($titles);    // remove namespace asterisk from titles list                
+
+            for ($i=0; $i<count($_pages); $i++) {
+               array_unshift ($pages , $_pages[$i]);
+               $_titles[$i] = basename($_pages[$i], '.txt');
+               $elems = explode(':',$_titles[$i] );              
+               $_titles[$i] = $elems[count($elems)-1];
+               $_titles[$i] = ucwords(str_replace('_',' ',$_titles[$i]));
+               array_unshift ($titles , $_titles[$i]);           
+            }
+            array_unshift($titles,$title_page);
+            
+            echo "Found following pages in $name namespace: \n";
+            print_r($_pages);
+            echo "Created following titles: \n";
+            print_r($_titles);
+        }
+		
+		function epub_isWindows() {  		
+		   return (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN');
+		}	
