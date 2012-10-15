@@ -227,7 +227,7 @@ HEADER;
 			return $item_num;
 		}
 
-		 function epub_zip_handle($path=null) {
+		 function epub_zip_handle($path=null) {                    
 		    static $zip; 
 			if(!class_exists ('ZipArchive'))  return false;
 			if($path && !$zip) {
@@ -384,8 +384,10 @@ NAVPOINT;
 			  }
 		    $meta = epub_get_metadirectory() ;
 			 
-			 
-			 if(!epub_zip_handle()) {
+			 if(!epub_zip_handle() && epub_isWindows()) {
+                epub_pack_ZipLib($meta);
+			 }
+			 elseif(!epub_zip_handle()) {
 			    chdir($meta);			 
 			    echo rawurlencode("*nix zip command used \n");
 			    $cmd =  'zip -Xr9Dq my-book.epub *';				
@@ -393,6 +395,8 @@ NAVPOINT;
 				if($ret > 0) {
 				   echo "zip error: exit status=$ret\n";
 				   echo "<b>Error codes:</b>\n  4: memory allocation error\n  11-18: unable write to or create file\n  127: zip command not found\n";
+                   echo "Trying ZipLib\n";
+                   epub_pack_ZipLib($meta);
 				}
 			} 
 			else echo "ziparchive used\n";
@@ -407,6 +411,19 @@ NAVPOINT;
 			}
 		}	 
 		
+        function epub_pack_ZipLib($meta) {
+			    chdir($meta);
+				echo	 rawurlencode("Using Dokuwiki's ZipLib Class\n");
+				$epub_file = $meta . 'my-book.epub';
+				unlink($epub_file);
+                $z = new ZipLib;
+                $z->add_File('application/epub+zip', 'mimetype', 0);
+                $z->Compress('OEBPS','./');
+                $z->Compress('META-INF','./');
+                $result = $z->get_file();
+                file_put_contents($epub_file,$result);        
+        }
+        
 		function epub_is_installed_plugin($which) {
 		    static $installed_plugins;
 			if(!$installed_plugins) {

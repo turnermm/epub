@@ -106,14 +106,8 @@
 			
 	}	
 	       
-            if(!class_exists ('ZipArchive')) {        
-                if (epub_isWindows()) {
-                    echo "Windows systems require the ZipArchive extension for creating ebooks\n";
-                    exit;
-                }
-            }
-            //echo "Namespace: " . wikiFN('epub:*') . "\n";
-            $epub_ids = 'ditaa:win_filebrowser'; //introduction;;v06;;features;;index:site_inx';
+           
+            // $epub_ids = 'ditaa:win_filebrowser;;introduction;;v06;;features;;index:site_inx';  
             if(isset ($_POST['epub_ids'])) $epub_ids = rawurldecode($_POST['epub_ids']);
             if(isset ($_POST['epub_titles'])) $e_titles = rawurldecode($_POST['epub_titles']);
 			$epub_pages =  explode(';;',$epub_ids) ;
