@@ -29,7 +29,7 @@
 		
 		function __construct() {     
             $this->allow_url_fopen=ini_get ( 'allow_url_fopen' ) ;			
-            $this->isWin=epub_isWindows();
+            $this->isWin=function_exists('epub_isWindows') ? epub_isWindows() : false;
 			
 		}
 		

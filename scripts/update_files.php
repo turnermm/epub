@@ -1,4 +1,4 @@
-﻿<?php	
+<?php	
 	if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../../../').'/');
 	if(!defined('NOSESSION')) define('NOSESSION',true); 	
 	if(!defined('EPUB_DIR')) define('EPUB_DIR',realpath(dirname(__FILE__).'/../').'/');

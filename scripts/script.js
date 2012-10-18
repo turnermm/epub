@@ -1,4 +1,4 @@
-﻿function epub_show_throbber(user,client) {	
+function epub_show_throbber(user,client) {	
 	var dom = document.getElementById('epub_throbber');  
 	if(!dom || !user || !epub_title) return;
 	dom.style.display='block'; 

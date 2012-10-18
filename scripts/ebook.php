@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 	
 	if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../../../').'/');
 	if(!defined('NOSESSION')) define('NOSESSION',true); 
@@ -136,8 +136,6 @@
                         else  
                         echo "processed: $page \n";		
                 }
-                //else epub_titlesStack($page_num);
-                //$page_num++;
             }
 			
             if(epub_footnote_handle(true)) {			
