@@ -18,7 +18,7 @@ function epub_show_throbber(user,client) {
     DOKU_BASE + 'lib/plugins/epub/scripts/ebook.php',
     params,
     function (data) {       	
-		dom.innerHTML = '<div style="width:800;overflow:auto;text-aling:left"><pre>' +decodeURIComponent(decodeURIComponent(data)) + '</pre></div>';   
+        dom.innerHTML = '<div style="width:800;overflow:auto;text-align:left"><pre>' +decodeURIComponent(decodeURIComponent(data)) + '</pre></div>';   
        regex=/Ebook:\s+(:?epub.*?\.epub)/;
        result = regex.exec(dom.innerHTML); 
 	   if(result) {
@@ -29,8 +29,6 @@ function epub_show_throbber(user,client) {
     'html'
 	);
 	
-	//epub_wikilink
-	//epub_id
 }
 
 function epub_stringifyArray(ar) {
@@ -58,4 +56,28 @@ function _epub_show_throbber(user,client) {
 	      epub_show_throbber(user,client);
 		  var dom = document.getElementById('show_throbberbutton');
 		  dom.style.display='none';
+     epub_check_progress(client,user);
+}	  
+
+
+function epub_check_progress(client,user) {
+   var dom = document.getElementById('epub_progress');
+     var params="user="+encodeURIComponent(user);
+     if(client) {
+  	   params += "&client="+encodeURIComponent(client);		
+	}
+    var secs = 0;
+    var t =window.setInterval(function() {
+        jQuery.post(
+        DOKU_BASE + 'lib/plugins/epub/scripts/check_progess.php',
+        params,
+        function (data) {      
+            if(!data) window.clearInterval(t);
+            secs++;
+            dom.innerHTML = data + '[seconds:  ' + secs*15 + ']';        
+        },
+        'html'
+        );
+        },
+        15000);
 }	  

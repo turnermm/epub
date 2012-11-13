@@ -33,6 +33,7 @@
 			     echo "$id not found\n";
 				 return false;
 			}
+            epub_update_progress("reading $id");
 			$text=io_readFile($wiki_file);
 			if(epub_is_installed_plugin('include_include') ) {
 			   epub_check_for_include($text);
@@ -46,7 +47,7 @@
 			$Renderer->entities = getEntities();
 			$Renderer->acronyms = array();
 			$Renderer->interwiki = getInterwiki();
-			
+			epub_update_progress("rendering $id,  this could take some time");
 			// Loop through the instructions
 			foreach ( $instructions as $instruction ) {
 				// Execute the callback against the Renderer
@@ -129,6 +130,7 @@
             epub_titlesStack($epub_titles);
             $page_num = 0;
             foreach($epub_pages as $page) {			  
+                epub_update_progress("processing: $page");
                 $creator = new epub_creator();
                 if($creator->create($page)) {
                 if(isset ($_POST['epub_ids']))
@@ -149,11 +151,10 @@
             epub_write_footer();
             epub_write_ncx();
             epub_finalize_zip() ;
+            epub_update_progress("packing  ebook");
             epub_pack_book();
+		    epub_update_progress();  // deletes progress file
 		
-		
-			
-			//echo str_replace("[","<br />[",print_r($_POST,true));			
 			
 			exit;			
 	

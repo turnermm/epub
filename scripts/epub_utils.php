@@ -128,7 +128,6 @@ FOOTER;
 					 $user=$temp_user?"$temp_user:$seed":$seed;
 				  }
 				  $dir = dirname(metaFN("epub:$user:tmp",'.meta')) . '/'; 
-				  //echo "working directory: $dir\n";
 		    }
 				 
 		    return $dir;    
@@ -563,3 +562,30 @@ NAVPOINT;
 		function epub_isWindows() {  		
 		   return (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN');
 		}	
+
+        function epub_update_progress($msg=null) {
+            static $user;
+            static $dir;
+            static $progress_file;
+            if(!$msg && $progress_file) {
+                unlink($progress_file);    
+            }
+            if(!$user) {
+                $user= rawurldecode($_POST['user']);
+                if($user) $user=cleanID($user);                
+            }
+            if(!$dir) {
+                if($user)  {
+                   $dir = epub_get_metadirectory($user);            
+                }
+                else $dir = epub_get_metadirectory();
+                $dir = rtrim($dir,'/');
+                $dir = dirname($dir . ".meta") . '/';
+                $progress_file = $dir . "progress.meta";
+            }           
+                        
+            if($progress_file && $msg) {              
+                io_saveFile($progress_file,"$msg\n");
+            }   
+
+        }    
