@@ -185,7 +185,7 @@ FOOTER;
 				epub_write_fn_header($handle);
 			}
 			if($current_page != $page) {
-			fwrite($handle,"<br/><h1>$page</h1>\n");
+			fwrite($handle,"<br/><h1><a name='$page' id='$page'>$page</a></h1>\n");
 			}			
 			$footnote = "<a href='$page#backto_$fn_id' class='wikilink1' title='$page'>[$fn_id]</a> <a href='$url'>$url</a><br />\n";
 			fwrite($handle,$footnote);

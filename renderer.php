@@ -228,9 +228,10 @@
  					$out = $link['name'];
 					$fn_id = epub_fn();
 					$link['name'] = "[$fn_id]";
-					$link['url'] = 'footnotes.html';					
+					$link['url'] = 'footnotes.html#' .$this->current_page;					
 					$link['class'] = 'wikilink1';
-					$hash_link='<a name="backto_' . $fn_id . '">';
+                    $id = 'backto_' . $fn_id;
+					$hash_link="<a id='$id' name='$id'>";
 					$out .= $hash_link . parent::_formatLink($link) . '</a>';
 					epub_write_footnote($fn_id,$this->current_page,$note_url);
 					return $out;
