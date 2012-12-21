@@ -19,6 +19,7 @@
 			$Renderer =& plugin_load('renderer',$mode);	    
 			$Renderer->set_oebps() ;
 			$Renderer->set_current_page(str_replace(':', '@', $id) . '.html') ;
+            $Renderer->set_current_ns($id) ;
 			$this->_renderer = $Renderer;
             if(is_null($Renderer)){
                 msg("No renderer for $mode found",-1);  

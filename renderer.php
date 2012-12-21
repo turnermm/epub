@@ -15,6 +15,7 @@
 		private $opf_handle;		
 		private $oebps;
 		private $current_page;
+        private $current_namespace;
 		private $allow_url_fopen; 
 		private $isWin;
 		function getInfo() {
@@ -46,6 +47,19 @@
 		}
         function set_current_page($page) {
 		   $this->current_page=$page;
+        
+		}
+        
+		function set_current_ns($id) {
+             $name = ltrim($id,':');
+             if(strpos($name,":") !== false) {                 
+                 $elems = explode(':',ltrim($name,':'));
+                 array_pop($elems);
+                $this->current_namespace = implode(':',$elems);
+            }
+           else {
+              $this->current_namespace = "";
+            }  
 		}
 		
 		function opf_handle() {
@@ -200,6 +214,11 @@
 					return $this->set_footnote($link,$fnote);
 				}
 				$name .='.html';
+                if($link['class'] == 'wikilink2') {
+                    $wfn =  wikiFN($orig);
+                    if( file_exists($wfn) ) $link['class'] =  'wikilink1';                    
+                }
+                
 			}
 			else if($type=='media') {  //internal media
 				$orig = "";				
@@ -260,6 +279,12 @@
             }
 
             if($name) {
+                if($this->current_namespace) {
+                       $name = ltrim($name,':');
+                       if(strpos($name,$this->current_namespace) === false) {
+                         $name = $this->current_namespace . ':' . $name;
+                      }
+                }
                 $orig = ltrim($name,':');               
                 return str_replace(':','@',$name);
             }
