@@ -112,8 +112,9 @@ FOOTER;
 				    return false;
 				}
 			}
+			if(in_array($id,$ep_ids)) return true;
 			
-			return in_array($id,$ep_ids);
+			return in_array(":$id",$ep_ids);
 		}
 		
         function epub_get_metadirectory($temp_user=null) {
