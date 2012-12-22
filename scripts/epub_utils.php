@@ -106,12 +106,18 @@ FOOTER;
 		    static $ep_ids;
 			if(!$ep_ids)  {	
 			    if(isset($_POST['epub_ids'])) {
-				    $ep_ids =explode(';;',rawurldecode($_POST['epub_ids']));							
+				    $ep_ids =explode(';;',rawurldecode($_POST['epub_ids']));		
+					$ns_pages = epub_save_ns_pages();                   
+                    if($ns_pages) {
+                        $ep_ids = array_merge($ns_pages,$ep_ids);
+                    }
+                      //echo print_r($ep_ids,true);
 				}
 				else {
 				    return false;
 				}
 			}
+            
 			if(in_array($id,$ep_ids)) return true;
 			
 			return in_array(":$id",$ep_ids);
@@ -556,10 +562,21 @@ NAVPOINT;
             
             echo "Found following pages in $name namespace: \n";
             print_r($_pages);
+            echo "Saving namespace pages\n";
+            epub_save_ns_pages($_pages);
             echo "Created following titles: \n";
             print_r($_titles);
+            
         }
 		
+        function epub_save_ns_pages($_pages="") {
+             static $pages;
+             if($_pages) {
+                 $pages = $_pages;                   
+             }
+             return $pages;
+        }
+        
 		function epub_isWindows() {  		
 		   return (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN');
 		}	
