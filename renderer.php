@@ -213,6 +213,8 @@
 					$fnote =  DOKU_URL .  "doku.php?id=$orig";	
 					return $this->set_footnote($link,$fnote);
 				}
+                $name = ltrim($name, '@');
+                $name = "@$name";
 				$name .='.html';
                 if($link['class'] == 'wikilink2') {
                     $wfn =  wikiFN($orig);
@@ -279,12 +281,6 @@
             }
 
             if($name) {
-                if($this->current_namespace) {
-                       $name = ltrim($name,':');
-                       if(strpos($name,$this->current_namespace) === false) {
-                         $name = $this->current_namespace . ':' . $name;
-                      }
-                }
                 $orig = ltrim($name,':');               
                 return str_replace(':','@',$name);
             }

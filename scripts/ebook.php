@@ -14,7 +14,8 @@
 		function create($id, $user_title=false) {
 			
 			ob_start();
-			
+            $id = ltrim($id, ':');
+            $id = ":$id";
 			$mode ='epub';
 			$Renderer =& plugin_load('renderer',$mode);	    
 			$Renderer->set_oebps() ;
