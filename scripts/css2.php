@@ -10,6 +10,7 @@ if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../..
 if(!defined('NOSESSION')) define('NOSESSION',true); // we do not use a session or authentication here (better caching)
 if(!defined('DOKU_DISABLE_GZIP_OUTPUT')) define('DOKU_DISABLE_GZIP_OUTPUT',1); // we gzip ourself here
 if(!defined('EPUB_DIR')) define('EPUB_DIR',realpath(dirname(__FILE__).'/../').'/');		
+require_once(DOKU_INC.'inc/init.php');
 if(!defined('DOKU_TPL')) define('DOKU_TPL', DOKU_BASE.'lib/tpl/'.$conf['template'].'/'); 
 if(!defined('DOKU_TPLINC')) define('DOKU_TPLINC', DOKU_INC.'lib/tpl/'.$conf['template'].'/');
 require_once(DOKU_INC.'inc/init.php');
@@ -74,6 +75,7 @@ function epub_css_out($path){
     }
  
     // load files
+    $css = "";
     foreach($files as $file => $location){
         $css .= css_loadfile($file, $location);
     }
@@ -83,10 +85,7 @@ function epub_css_out($path){
 
     // place all @import statements at the top of the file
     $css = css_moveimports($css);
-
-   
-
-    io_saveFile($path . 'style.css',$css);
+    io_saveFile($path . 'Styles/style.css' ,$css);
  
 }
 

@@ -14,13 +14,12 @@
 		function create($id, $user_title=false) {
 			
 			ob_start();
-            $id = ltrim($id, ':');
-            $id = ":$id";
+        	        $id = ltrim($id, ':');
+                        $id = ":$id";
 			$mode ='epub';
 			$Renderer =& plugin_load('renderer',$mode);	    
 			$Renderer->set_oebps() ;
 			$Renderer->set_current_page(str_replace(':', '@', $id) . '.html') ;
-            $Renderer->set_current_ns($id) ;
 			$this->_renderer = $Renderer;
             if(is_null($Renderer)){
                 msg("No renderer for $mode found",-1);  
@@ -59,7 +58,7 @@
 			$result .= '<html xmlns="http://www.w3.org/1999/xhtml">' . "\n";
 			$result .= "\n<head>\n";
 			$result .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>' ."\n";
-			$result .= '<link rel="stylesheet"  type="text/css" href="style.css"/>';
+			$result .= '<link rel="stylesheet"  type="text/css" href="../Styles/style.css"/>';
 			$result .= "\n<title>";
 			$result .= "</title>\n</head><body>\n";
 			$result .= "<div class='dokuwiki'>\n";
@@ -91,14 +90,14 @@
             else {
             $id = str_replace(':', '@', $id) . '.html';
                }
-             io_saveFile(epub_get_oebps() .$id,$result);
+             io_saveFile(epub_get_oebps() ."Text/$id",$result);
             
 			if($user_title) {				
-			    epub_write_zip('title.html');
+			    epub_write_zip('Text/title.html');
 				return true;
 			}
-			$item_num=epub_write_item($id, "application/xhtml+xml");
-			epub_push_spine(array($id,$item_num));
+			$item_num=epub_write_item("Text/$id", "application/xhtml+xml");
+			epub_push_spine(array("Text/$id",$item_num));
 			return true;
 		}  
 		
@@ -147,7 +146,7 @@
 			}
 			
             epub_css(); 
-            epub_write_item('style.css',"text/css");
+            epub_write_item('Styles/style.css',"text/css");
             epub_opf_write('</manifest>');
             epub_write_spine();
             epub_write_footer();

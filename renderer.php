@@ -15,7 +15,6 @@
 		private $opf_handle;		
 		private $oebps;
 		private $current_page;
-        private $current_namespace;
 		private $allow_url_fopen; 
 		private $isWin;
 		function getInfo() {
@@ -47,19 +46,6 @@
 		}
         function set_current_page($page) {
 		   $this->current_page=$page;
-        
-		}
-        
-		function set_current_ns($id) {
-             $name = ltrim($id,':');
-             if(strpos($name,":") !== false) {                 
-                 $elems = explode(':',ltrim($name,':'));
-                 array_pop($elems);
-                $this->current_namespace = implode(':',$elems);
-            }
-           else {
-              $this->current_namespace = "";
-            }  
 		}
 		
 		function opf_handle() {

@@ -32,7 +32,7 @@
 </metadata>
 <manifest>
 <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/> 
- <item id="cover" href="title.html" media-type="application/xhtml+xml"/>
+ <item id="cover" href="Text/title.html" media-type="application/xhtml+xml"/>
  $cover_png
 OUTP;
 			
@@ -87,7 +87,7 @@ NCX;
 		function epub_write_footer() {
 		$footer=<<<FOOTER
   <guide>
-    <reference href="title.html" type="cover" title="Cover"/>
+    <reference href="Text/title.html" type="cover" title="Cover"/>
   </guide>		
 </package>
 FOOTER;
@@ -179,8 +179,8 @@ FOOTER;
        function epub_close_footnotes() {
 	         $handle = epub_footnote_handle(true);
 			 if(!$handle) return;
-		     $item_num=epub_write_item('footnotes.html', "application/xhtml+xml");
-			 epub_push_spine(array('footnotes.html',$item_num));
+		     $item_num=epub_write_item('Text/footnotes.html', "application/xhtml+xml");
+			 epub_push_spine(array('Text/footnotes.html',$item_num));
 			 fwrite($handle,"\n</div></body></html>");		
 	   }
 	   
@@ -203,7 +203,8 @@ FOOTER;
 $header=<<<HEADER
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link rel="stylesheet"  type="text/css" href="style.css"/>
+<link rel="stylesheet"  type="text/css" href="../Styles/style.css"/>
+
 <title>Footnotes</title></head><body>
 <div class='dokuwiki'>
 HEADER;
@@ -215,7 +216,7 @@ HEADER;
 			if($return_only) return $handle;
 			if(!$handle) {
 			    $oebps = epub_get_oebps();
-				$handle=fopen($oebps. 'footnotes.html', 'a');
+				$handle=fopen($oebps. 'Text/footnotes.html', 'a');
 			}
 			return $handle;
 		}
@@ -352,7 +353,9 @@ NAVPOINT;
             io_mkdir_p($meta);
 			io_mkdir_p($oebps);			
             io_mkdir_p($oebps . 'images/');			
+            io_mkdir_p($oebps . 'Text/');			
 			io_mkdir_p($media_dir);
+            io_mkdir_p($oebps . 'Styles/');			
 		     if(isset($_POST['client'])) {
 				  $user= rawurldecode($_POST['client']) . '/';				  
 				  io_mkdir_p($media_dir. '/'. $user);
@@ -361,14 +364,14 @@ NAVPOINT;
 			copy(EPUB_DIR . 'scripts/package/my-book.epub', $dir . 'my-book.epub');
 			copy(EPUB_DIR . 'scripts/package/container.xml', $dir . 'META-INF/container.xml');	
 			if(!$user_title) {
-			    copy(EPUB_DIR . 'scripts/package/title.html', $oebps . 'title.html');								
+			    copy(EPUB_DIR . 'scripts/package/title.html', $oebps . 'Text/title.html');								
 			    copy(EPUB_DIR . 'scripts/package/cover.png', $oebps . 'cover.png');								
 			}
 		    $zip = epub_zip_handle($dir . 'my-book.epub');
 			if($zip) {
 			    $zip->addFile(EPUB_DIR . 'scripts/package/container.xml', 'META-INF/container.xml');
 				if(!$user_title) {
-					$zip->addFile(EPUB_DIR . 'scripts/package/title.html', 'OEBPS/title.html');				
+					$zip->addFile(EPUB_DIR . 'scripts/package/title.html', 'OEBPS/Text/title.html');				
 					$zip->addFile(EPUB_DIR . 'scripts/package/cover.png', 'OEBPS/cover.png');								
 				}
 			}
@@ -383,13 +386,13 @@ NAVPOINT;
 		}	
 		function epub_pack_book() {		  
 		    echo "packing epub\n";
-		
+	//	exit;
 		     $user = "";
 		     if(isset($_POST['client'])) {
 				  $user= rawurldecode($_POST['client']) . '/';
 			  }
 		    $meta = epub_get_metadirectory() ;
-			 
+		    echo "$meta\n";	 
 			 if(!epub_zip_handle() && epub_isWindows()) {
                 epub_pack_ZipLib($meta);
 			 }
