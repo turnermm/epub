@@ -99,8 +99,10 @@
                           $n = count($ar) -1;
                           $rest = $ar[$n];
                          }
-                         $rest =  str_replace(':','&#58;',$rest);
-                         $renderer->doc .= "epub_wikilink[$i]='" . str_replace('/',':',$rest) . "';\n"	;			  
+                        
+                        $rest=hsc($rest);
+                        $rest =  str_replace(':','&#58;',$rest);
+                        $renderer->doc .= "epub_wikilink[$i]='" . str_replace('/',':',$rest) . "';\n"	;			  
 					}
 					
 					$renderer->doc .= 'epub_title="' . $this->title . '";';

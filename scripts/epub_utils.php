@@ -17,7 +17,7 @@
 			$title=rawurldecode($_POST['title']); 
 			$uniq_id = str_replace('/','', DOKU_BASE) . "_id";
            if(!$user_title) {			
-               $cover_png='<item id="cover-image" href="cover.png" media-type="image/png"/>'. "\n";
+               $cover_png='<item id="cover-image" href="Images/cover.png" media-type="image/png"/>'. "\n";
             }
 			$outp = <<<OUTP
 <?xml version='1.0' encoding='utf-8'?>
@@ -352,7 +352,7 @@ NAVPOINT;
 			$media_dir = epub_get_data_media() . 'epub';
             io_mkdir_p($meta);
 			io_mkdir_p($oebps);			
-            io_mkdir_p($oebps . 'images/');			
+            io_mkdir_p($oebps . 'Images/');			
             io_mkdir_p($oebps . 'Text/');			
 			io_mkdir_p($media_dir);
             io_mkdir_p($oebps . 'Styles/');			
@@ -365,14 +365,14 @@ NAVPOINT;
 			copy(EPUB_DIR . 'scripts/package/container.xml', $dir . 'META-INF/container.xml');	
 			if(!$user_title) {
 			    copy(EPUB_DIR . 'scripts/package/title.html', $oebps . 'Text/title.html');								
-			    copy(EPUB_DIR . 'scripts/package/cover.png', $oebps . 'cover.png');								
+			    copy(EPUB_DIR . 'scripts/package/cover.png', $oebps . 'Images/cover.png');								
 			}
 		    $zip = epub_zip_handle($dir . 'my-book.epub');
 			if($zip) {
 			    $zip->addFile(EPUB_DIR . 'scripts/package/container.xml', 'META-INF/container.xml');
 				if(!$user_title) {
 					$zip->addFile(EPUB_DIR . 'scripts/package/title.html', 'OEBPS/Text/title.html');				
-					$zip->addFile(EPUB_DIR . 'scripts/package/cover.png', 'OEBPS/cover.png');								
+					$zip->addFile(EPUB_DIR . 'scripts/package/cover.png', 'OEBPS/Images/cover.png');								
 				}
 			}
 		}

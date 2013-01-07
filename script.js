@@ -10,10 +10,11 @@ function epub_show_throbber(user,client) {
 	
 	params+="&epub_ids="+epub_stringifyArray(epub_id);
     params+="&epub_titles="+epub_stringifyArray(epub_wikilink);
-   
+  
     if(client) {
 	params += "&client="+encodeURIComponent(client);		
 	}
+    
 	jQuery.post(
     DOKU_BASE + 'lib/plugins/epub/scripts/ebook.php',
     params,
