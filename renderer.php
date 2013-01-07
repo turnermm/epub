@@ -159,7 +159,8 @@
 		*/
 		
 		function _formatLink($link){
-			$type = "";
+			$type = "";           
+           
 			if($this->is_image($link,$type)) {
 				if(preg_match('#media\s*=\s*http#',$link['url'])) {
 					$name = $this->copy_media($link['title'],true);
@@ -170,15 +171,17 @@
 				}
 				elseif(strpos($link['name'],'<img') !== false) {
 					$name = $this->copy_media($link['title']);
-					if(strpos($link['name'],'fetch.php') !== false) {
-						$t = $link['title'];
+					if(strpos($link['name'],'fetch.php') !== false) {		
+                        $t = $link['title'];
 						$link['name'] = preg_replace("#src=.*?$t\"#", "src=\"$name\"",$link['name']);
 						if(strpos($link['name'],'alt=""') !==false) {
 							$link['name'] = str_replace('alt=""','alt="'. $link['title'] . '"', $link['name']);
-						}
-						return $link['name'];
+						}                       
+						return $this->clean_image_link($link['name']);
 					}
-					$link['name'] = str_replace($link['title'],$name,$link['name']);
+                          
+                    $link['name'] = $this->clean_image_link($link['name']);                   
+                            
 					return $link['name'];
 				}
 				
@@ -231,6 +234,11 @@
 			return parent::_formatLink($link);
 		}
 		
+         function clean_image_link($link) {
+                $link = str_replace('Images/Images',"Images",$link);
+                $link = preg_replace('#[\.\/]*Images#', "../Images", $link );
+                return $link;
+         }
          function set_footnote($link, $note_url="") {
  					$out = $link['name'];
 					$fn_id = epub_fn();
@@ -275,6 +283,8 @@
 	
 		function copy_media($media,$external=false) {
 			$name =  str_replace(':','@',basename($media));		
+            $ret_name = $name;  
+           
 			$mime_type = mimetype($name);
 			list($type,$ext) = explode('/', $mime_type[1] );
 			if($type !== 'image') return;
@@ -297,8 +307,11 @@
                 }
             }
            
-			$file = $this->oebps . $name;
-		
+            if(!preg_match("/^Images/", $name)) {
+                $name = "Images/$name";			    
+            }
+
+		    $file = $this->oebps . $name;
 			if(file_exists($file)) return $name;
 			if(!$external) {            
 				$media = mediaFN($media);
@@ -316,7 +329,8 @@
 			$h="";
 			if($width)   $w= ' width="' . $width . '"';
 			if($height)   $h= ' height="' .$height . '"';
-			
+            $img = $this->clean_image_link($img);
+			//echo hsc('<img src="' . $img . '"' .  "$h $w " . ' alt="'. $img . '" class="media" />') ."\n";
 			return '<img src="' . $img . '"' .  "$h $w " . ' alt="'. $img . '" class="media" />';
 		}
 	
