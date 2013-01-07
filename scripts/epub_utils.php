@@ -16,11 +16,9 @@
             $title=rawurldecode($_POST['title']); 
 			
             $unique_identifier = rtrim($url,'/');
-            $ident_title =  str_replace(' ', '_',strtolower(trim($title)));
-            echo $ident_title ."\n";
+            $ident_title =  str_replace(' ', '_',strtolower(trim($title)));            
             $unique_identifier .= "/$ident_title"; 
-            echo "$unique_identifier\n";
-
+            
 			$uniq_id = str_replace('/','', DOKU_BASE) . "_id";
             $dc_date =  date("r");
             $epub_version = "fckglite";
