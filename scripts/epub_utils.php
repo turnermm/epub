@@ -13,9 +13,25 @@
 			$user= rawurldecode($_POST['user']);
 			$url=rawurldecode($_POST['location']); 
 			$url=dirname($url);
+            $title=rawurldecode($_POST['title']); 
 			
-			$title=rawurldecode($_POST['title']); 
+            $unique_identifier = rtrim($url,'/');
+            $ident_title =  str_replace(' ', '_',strtolower(trim($title)));
+            echo $ident_title ."\n";
+            $unique_identifier .= "/$ident_title"; 
+            echo "$unique_identifier\n";
+
 			$uniq_id = str_replace('/','', DOKU_BASE) . "_id";
+            $dc_date =  date("r");
+            $epub_version = "fckglite";
+            $info_data = file(EPUB_DIR . 'plugin.info.txt',FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            for($i=0; $i<count($info_data); $i++) {
+            if(strpos($info_data[$i],'date') !== false) {
+                $epub_version = trim(str_replace('date',"",$info_data[$i]));
+                break;
+               }
+            }
+           
            if(!$user_title) {			
                $cover_png='<item id="cover-image" href="Images/cover.png" media-type="image/png"/>'. "\n";
             }
@@ -26,9 +42,11 @@
 <metadata>
 <dc:title>$title</dc:title>
 <dc:creator>$user</dc:creator>
-<dc:identifier id="$uniq_id">$url</dc:identifier>
+<dc:identifier id="$uniq_id">$unique_identifier</dc:identifier>
 <dc:language>$lang</dc:language>
- <meta name="cover" content="cover-image" />
+<dc:date>$dc_date</dc:date>
+<meta name="cover" content="cover-image" />
+<meta name="plugin version" content="$epub_version"/>
 </metadata>
 <manifest>
 <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/> 
