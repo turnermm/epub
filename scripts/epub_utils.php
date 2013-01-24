@@ -402,7 +402,7 @@ NAVPOINT;
 		}	
 		function epub_pack_book() {		  
 		    echo "packing epub\n";
-	//	exit;
+	
 		     $user = "";
 		     if(isset($_POST['client'])) {
 				  $user= rawurldecode($_POST['client']) . '/';
@@ -425,10 +425,10 @@ NAVPOINT;
 				}
 			} 
 			else echo "ziparchive used\n";
-			$media_dir = epub_get_data_media() . 'epub/' . $user;			
+            
 			$oldname = $meta . 'my-book.epub';	        
-			$epub_file = strtolower(date("Y_F_j_h-i-s") ) . '.epub';
-			$newname = $media_dir .  $epub_file;
+			$epub_file = strtolower(date("Y_F_j_h-i-s") ) . '.epub';			
+			$newname = mediaFN("epub:$user:$epub_file");
             
 			if(rename ($oldname , $newname )) {
 			   if($user) $user= str_replace('/',':',$user);
