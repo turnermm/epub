@@ -373,7 +373,7 @@ NAVPOINT;
 			io_mkdir_p($media_dir);
             io_mkdir_p($oebps . 'Styles/');			
 		     if(isset($_POST['client'])) {
-				  $user= rawurldecode($_POST['client']) . '/';				  
+				  $user= cleanID(rawurldecode($_POST['client'])) . '/';
 				  io_mkdir_p($media_dir. '/'. $user);
 			  }
 			
@@ -431,8 +431,8 @@ NAVPOINT;
 			$newname = mediaFN("epub:$user:$epub_file");
             
 			if(rename ($oldname , $newname )) {
-			   if($user) $user= str_replace('/',':',$user);
-			   echo "New Ebook: epub:" . $user . "$epub_file\n" ;
+				$epub_id = cleanID("epub:$user:$epub_file");
+				echo "New Ebook: $epub_id\n";
 			}
 		}	 
 		
