@@ -42,6 +42,7 @@
             $auth = auth_quickaclcheck($INFO['id']);
             if($auth) {
                 $page_data = $this->helper->get_page_data($INFO['id']);    
+                if(!$page_data) return;
                 $ebook = $page_data['epub'];
                 $link = ml($ebook);
                 $title = $page_data['title'];                
