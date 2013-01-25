@@ -29,6 +29,9 @@ class helper_plugin_epub extends Dokuwiki_Plugin {
 	function remove_page($id) {
 	     $md5 = md5($id);
 		 unset($this->cache[$md5]);
+         if(isset($this->cache['current_books'][$md5])) {
+            unset($this->cache['current_books'][$md5]);
+         }         
 		 io_saveFile($this->script_file,serialize($this->cache));	
 	}
 
@@ -44,6 +47,27 @@ class helper_plugin_epub extends Dokuwiki_Plugin {
     
     function getCache() {
          return  $this->cache;
-    }     
+    }   
+    
+    
+    function addBook($id,$epub,$title) {
+         $md5 = md5($id);
+         if(!$this->is_inCache($id)) {
+            $this->cache[$md5] = $id;            
+         }
+         if(!isset($this->cache['current_books'])) {
+            $this->cache['current_books'] = array();
+         }
+         $this->cache['current_books'][$md5] = array('title'=>$title, 'epub'=>$epub);
+         io_saveFile($this->script_file,serialize($this->cache));
+    }
+    
+    function get_page_data($id) {
+         $md5 = md5($id);
+         if(isset($this->cache['current_books'][$md5])) {
+            return $this->cache['current_books'][$md5];
+         }
+         return false;
+    }
 }
 	 

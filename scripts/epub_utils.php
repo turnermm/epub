@@ -1,6 +1,7 @@
 <?php	
 	if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../../../').'/');	
-	if(!defined('EPUB_DIR')) define('EPUB_DIR',realpath(dirname(__FILE__).'/../').'/');		
+	if(!defined('EPUB_DIR')) define('EPUB_DIR',realpath(dirname(__FILE__).'/../').'/');	
+	require_once(EPUB_DIR.'/helper.php');
 			/**
 			utilities
 			*/
@@ -161,9 +162,9 @@ FOOTER;
 	         static $dir;
              global $conf;			
 			 if(!$dir) {
-			     $dir = init_path($conf['savedir']) . '/media/';			
+			     $dir = init_path($conf['savedir']) . '/media/';			              
 			 }
-			 
+			             
 			 return $dir;
 			 
 	   }
@@ -365,7 +366,7 @@ NAVPOINT;
 		    $dir=epub_get_metadirectory();
 		    $meta = $dir . 'META-INF';
 		    $oebps = epub_get_oebps(); 
-			$media_dir = epub_get_data_media() . 'epub';
+			$media_dir = epub_get_data_media() . 'epub';         
             io_mkdir_p($meta);
 			io_mkdir_p($oebps);			
             io_mkdir_p($oebps . 'Images/');			
@@ -373,10 +374,12 @@ NAVPOINT;
 			io_mkdir_p($media_dir);
             io_mkdir_p($oebps . 'Styles/');			
 		     if(isset($_POST['client'])) {
-				  $user= cleanID(rawurldecode($_POST['client'])) . '/';
+				  $user= cleanID(rawurldecode($_POST['client'])). '/';				  
 				  io_mkdir_p($media_dir. '/'. $user);
 			  }
-			
+			$book_id = cleanID(rawurldecode($_POST['book_page']));
+            echo "id= $book_id\n";
+            echo wikiFN($book_id) . "\n";
 			copy(EPUB_DIR . 'scripts/package/my-book.epub', $dir . 'my-book.epub');
 			copy(EPUB_DIR . 'scripts/package/container.xml', $dir . 'META-INF/container.xml');	
 			if(!$user_title) {
@@ -428,11 +431,14 @@ NAVPOINT;
             
 			$oldname = $meta . 'my-book.epub';	        
 			$epub_file = strtolower(date("Y_F_j_h-i-s") ) . '.epub';			
-			$newname = mediaFN("epub:$user:$epub_file");
-            
+			$newname = mediaFN("epub:$user:$epub_file");           
 			if(rename ($oldname , $newname )) {
-				$epub_id = cleanID("epub:$user:$epub_file");
-				echo "New Ebook: $epub_id\n";
+                $epub_id = cleanID("epub:$user:$epub_file");           
+               	$helper = new  helper_plugin_epub();	
+                $id = cleanID(rawurldecode($_POST['book_page']));
+                $title=rawurldecode($_POST['title']);
+                $helper->addBook($id,$epub_id,$title);
+			    echo "New Ebook: $epub_id\n" ;
 			}
 		}	 
 		

@@ -14,7 +14,9 @@ function epub_show_throbber(user,client) {
     if(client) {
 	params += "&client="+encodeURIComponent(client);		
 	}
-    
+    if(book_id) {
+        params+= "&book_page="  + encodeURIComponent(book_id);		      
+    }
 	jQuery.post(
     DOKU_BASE + 'lib/plugins/epub/scripts/ebook.php',
     params,
@@ -23,7 +25,7 @@ function epub_show_throbber(user,client) {
        regex=/Ebook:\s+(:?epub.*?\.epub)/;
        result = regex.exec(dom.innerHTML); 
 	   if(result) {
-           var epub='http://'+ location.host  + DOKU_BASE + '/lib/exe/fetch.php?media=' + result[1];
+           var epub='http://'+ location.host  + DOKU_BASE + 'lib/exe/fetch.php?media=' + result[1];
            dom.innerHTML +='<div><center><a href="' + epub + '" class="media mediafile mf_epub" title="' + result[1] +'">' + result[1] +'</a></center></div>';
 	   }
 	},

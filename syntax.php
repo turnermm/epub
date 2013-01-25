@@ -75,11 +75,10 @@
 					break;
 					
 					case DOKU_LEXER_UNMATCHED :
-					
+					$id = $INFO['id'];
 					$renderer->doc .= "\n<SCRIPT  type='text/javascript'>\n//<![CDATA[\n" ;
-					
+					$renderer->doc .= "\nvar book_id = '$id';";
 					$renderer->doc .= "\nvar epub_wikilink = new Array();\nvar epub_id = new Array();\n";
-
 					$files = explode("\n",$match);
 
 					for($i=0;$i<count($files);$i++) {					      
