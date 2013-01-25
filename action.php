@@ -45,8 +45,10 @@
                 $ebook = $page_data['epub'];
                 $link = ml($ebook);
                 $title = $page_data['title'];                
-                echo "The most recent ebook for this page is: <a href='$link' title='$title'>$title ($ebook)</a>.<br />";
-                echo "To download it, click on the link.  If you have an ebook reader plugin installed, right-click on the link and select 'Save . . . As'.";
+                echo  $this->getLang('download');  //The most recent ebook for this page is:
+                echo " <a href='$link' title='$title'>$title ($ebook)</a>.<br />";
+                echo  $this->getLang('download_click');   // To download it, click on the link. 
+                echo $this->getLang('download_alt');    //    If you have an ebook reader plugin installed, right-click on the link and select 'Save . . . As'.";
             }
 
           
