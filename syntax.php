@@ -113,7 +113,7 @@
 					
 					case DOKU_LEXER_EXIT :
 				    $throbber = DOKU_BASE . 'lib/plugins/epub/throbber.gif';
-				    $renderer->doc .= '<div id="epub_throbber" style="display:none;"><center><img src="' . $throbber .'"</center><br /><span id="epub_progress">progress</span></div>';
+				    $renderer->doc .= '<div id="epub_throbber" style="display:none;"><center><img src="' . $throbber .'"></center><br /><span id="epub_progress">progress</span></div>';
 				    $renderer->doc .= "\n</div>";
 				    break;
 				}
