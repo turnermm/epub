@@ -1,2 +1,2 @@
-﻿<?php
+<?php
 $conf['group'] = 'epub';
