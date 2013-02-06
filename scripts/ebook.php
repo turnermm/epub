@@ -29,6 +29,12 @@
 					
 		
 			$id = $id;
+
+			global $ID;
+			$oldID = $ID;
+
+			$ID = cleanID($id);
+
 			$wiki_file = wikiFN($id);
 			if(!file_exists($wiki_file)) {
                  epub_push_spine(array("",""));
@@ -36,11 +42,7 @@
 				 return false;
 			}
             epub_update_progress("reading $id");
-			$text=io_readFile($wiki_file);
-			if(epub_is_installed_plugin('include_include') ) {
-			   epub_check_for_include($text,$namespace);
-			}
-			$instructions = p_get_instructions($text);
+			$instructions = p_cached_instructions($wiki_file, false, $id);
 			if(is_null($instructions)) return '';
 			
 			
@@ -100,6 +102,9 @@
 			$item_num=epub_write_item("Text/$id", "application/xhtml+xml");
 			epub_push_spine(array("Text/$id",$item_num));
             epub_save_namespace();
+
+			$ID = $oldID;
+
 			return true;
 		}  
 		
