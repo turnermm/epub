@@ -1,7 +1,6 @@
 <?php
 	
 	if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../../../').'/');
-	if(!defined('NOSESSION')) define('NOSESSION',true); 
 	if(!defined('NL')) define('NL',"\n");
 	if(!defined('EPUB_DIR')) define('EPUB_DIR',realpath(dirname(__FILE__).'/../').'/');
 	require_once(DOKU_INC.'inc/init.php');
@@ -14,8 +13,10 @@
 		function create($id, $user_title=false) {
 			
 			ob_start();
-        	        $id = ltrim($id, ':');
-                        $id = ":$id";
+        	$id = ltrim($id, ':');
+            $id = ":$id";         
+            $namespace= getNS($id);
+            epub_save_namespace($namespace);
 			$mode ='epub';
 			$Renderer =& plugin_load('renderer',$mode);	    
 			$Renderer->set_oebps() ;
@@ -37,7 +38,7 @@
             epub_update_progress("reading $id");
 			$text=io_readFile($wiki_file);
 			if(epub_is_installed_plugin('include_include') ) {
-			   epub_check_for_include($text);
+			   epub_check_for_include($text,$namespace);
 			}
 			$instructions = p_get_instructions($text);
 			if(is_null($instructions)) return '';
@@ -98,6 +99,7 @@
 			}
 			$item_num=epub_write_item("Text/$id", "application/xhtml+xml");
 			epub_push_spine(array("Text/$id",$item_num));
+            epub_save_namespace();
 			return true;
 		}  
 		
@@ -130,7 +132,7 @@
             array_push($epub_titles,"Footnotes");
             epub_titlesStack($epub_titles);
             $page_num = 0;
-            foreach($epub_pages as $page) {			  
+            foreach($epub_pages as $page) {		
                 epub_update_progress("processing: $page");
                 $creator = new epub_creator();
                 if($creator->create($page)) {

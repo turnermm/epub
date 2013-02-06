@@ -1,4 +1,4 @@
-﻿<?
+<?
 if(!class_exists('ZipArchive')) {
   $system = php_uname('s') ;
   if(strpos('Windows',$system) !== false) {

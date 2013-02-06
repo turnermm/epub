@@ -512,6 +512,13 @@ NAVPOINT;
 			}
 		}	
 		
+        function epub_save_namespace($ns="") {
+           static $namespace;
+           if($ns !== false)  {
+              $namespace = $ns;
+           }   
+           return $namespace;
+        }
 	    function epub_check_for_include(&$text) {
 		    $regex = '#\{\{page>(.*?)\}\}#m';			
 			if(!preg_match_all($regex,$text,$matches)) return;		
@@ -521,6 +528,17 @@ NAVPOINT;
        function epub_replace_include($matches) {
             list($id,$rest) = explode('&',$matches[1]);
             list($id,$hash) = explode('#',$id);
+            $ns=epub_save_namespace(false);
+            if($ns) {
+                $id = ltrim($id, ':');
+                $id = $ns . ':' . $id;
+            }
+            if(epub_check_perm($id) < 2) {
+                 echo "You do not have sufficient permission to include $id in your ebook.\n";
+                 echo "To include a file, you must have at least write permission to that file\n";
+                 return "";
+            }
+
             $wiki_file = wikiFN($id);
             if(!file_exists($wiki_file)) {
                 return "";
@@ -632,3 +650,9 @@ NAVPOINT;
             }   
 
         }    
+
+         function epub_check_perm($id) {          
+            $id= cleanID(rawurldecode($id));
+            $acl = auth_quickaclcheck($id);
+            return $acl;
+          }
