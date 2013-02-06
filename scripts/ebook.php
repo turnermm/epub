@@ -36,11 +36,7 @@
 				 return false;
 			}
             epub_update_progress("reading $id");
-			$text=io_readFile($wiki_file);
-			if(epub_is_installed_plugin('include_include') ) {
-			   epub_check_for_include($text,$namespace);
-			}
-			$instructions = p_get_instructions($text);
+			$instructions = p_cached_instructions($wiki_file, false, $id);
 			if(is_null($instructions)) return '';
 			
 			
