@@ -29,6 +29,12 @@
 					
 		
 			$id = $id;
+
+			global $ID;
+			$oldID = $ID;
+
+			$ID = cleanID($id);
+
 			$wiki_file = wikiFN($id);
 			if(!file_exists($wiki_file)) {
                  epub_push_spine(array("",""));
@@ -96,6 +102,9 @@
 			$item_num=epub_write_item("Text/$id", "application/xhtml+xml");
 			epub_push_spine(array("Text/$id",$item_num));
             epub_save_namespace();
+
+			$ID = $oldID;
+
 			return true;
 		}  
 		
