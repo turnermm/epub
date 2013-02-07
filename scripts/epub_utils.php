@@ -488,7 +488,7 @@ NAVPOINT;
 			        $name=$renderer->copy_media($cache,true);		//copy the image to epub's OEBPS directory and enter it into opf file		    
 				    if($name) {
 				     	$regex = '#<img src=\"(.*?' . $data['md5'] . '.*?)\".*\/>#m';	// use the ditaa  plugin's md5 identifier to replace correct image	
-					    $replace = '<img src="' . $name . '" />';							
+					    $replace = '<img src="../' . $name . '" />';							
 					    $xhtml = preg_replace($regex,$replace,$xhtml);
 				    }
 			    }	
@@ -505,7 +505,7 @@ NAVPOINT;
 				 $cache = getcachename($matches[1], '.mathpublish.png');
 				 $name=$renderer->copy_media($cache,true);
 			
-				 $name = 'src="' . $name . '" ' ;
+				 $name = 'src="../' . $name . '" ' ;
 				 $regex = '#src\s*=.*?mathpublish\/img.php\?img=([a-f0-9]+)\"#';
 				 $xhtml = preg_replace($regex, $name ,$xhtml );
 				
