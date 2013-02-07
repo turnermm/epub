@@ -12,23 +12,21 @@
 		private $_renderer;
 		function create($id, $user_title=false) {
 			
-			ob_start();
-        	$id = ltrim($id, ':');
+            ob_start();
+            $id = ltrim($id, ':');
             $id = ":$id";         
             $namespace= getNS($id);
             epub_save_namespace($namespace);
-			$mode ='epub';
-			$Renderer =& plugin_load('renderer',$mode);	    
-			$Renderer->set_oebps() ;
-			$Renderer->set_current_page(str_replace(':', '@', $id) . '.html') ;
-			$this->_renderer = $Renderer;
+            $mode ='epub';
+            $Renderer =& plugin_load('renderer',$mode);	    
+            $Renderer->set_oebps() ;
+            $Renderer->set_current_page(str_replace(':', '@', $id) . '.html') ;
+            $this->_renderer = $Renderer;
             if(is_null($Renderer)){
                 msg("No renderer for $mode found",-1);  
                 exit;
             }
-					
 		
-			$id = $id;
 
 			global $ID;
 			$oldID = $ID;

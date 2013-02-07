@@ -317,7 +317,7 @@ HEADER;
   <navLabel>
 	<text>$title</text>
   </navLabel>
-  <content src="$page"/>
+  <content src="Text/$page"/>
 </navPoint>
 NAVPOINT;
              fwrite($opf_handle,"$navpoint\n");
@@ -377,9 +377,8 @@ NAVPOINT;
 				  $user= cleanID(rawurldecode($_POST['client'])). '/';				  
 				  io_mkdir_p($media_dir. '/'. $user);
 			  }
-			$book_id = cleanID(rawurldecode($_POST['book_page']));
-            echo "id= $book_id\n";
-            echo wikiFN($book_id) . "\n";
+			$book_id = cleanID(rawurldecode($_POST['book_page']));       
+         
 			copy(EPUB_DIR . 'scripts/package/my-book.epub', $dir . 'my-book.epub');
 			copy(EPUB_DIR . 'scripts/package/container.xml', $dir . 'META-INF/container.xml');	
 			if(!$user_title) {
@@ -436,6 +435,7 @@ NAVPOINT;
                 $epub_id = cleanID("epub:$user:$epub_file");           
                	$helper = new  helper_plugin_epub();	
                 $id = cleanID(rawurldecode($_POST['book_page']));
+                echo "ebook id=$id\n";
                 $title=rawurldecode($_POST['title']);
                 $helper->addBook($id,$epub_id,$title);
 			    echo "New Ebook: $epub_id\n" ;
