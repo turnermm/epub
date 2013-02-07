@@ -97,6 +97,7 @@
             
 			if($user_title) {				
 			    epub_write_zip('Text/title.html');
+                $ID = $oldID;
 				return true;
 			}
 			$item_num=epub_write_item("Text/$id", "application/xhtml+xml");
