@@ -3,3 +3,4 @@
  $lang['rmdir'] = "Remove scratch directory after the ebook has been created.";
  $lang['permalink'] = "Keep a permanent download link on the book creator page";
  
+ 
