@@ -28,6 +28,10 @@ class helper_plugin_epub extends Dokuwiki_Plugin {
     
 	function remove_page($id) {
 	     $md5 = md5($id);
+         $this->delete_page($md5);
+    }
+    
+    function delete_page($md5) {    
 		 unset($this->cache[$md5]);
          if(isset($this->cache['current_books'][$md5])) {
             unset($this->cache['current_books'][$md5]);
@@ -35,7 +39,17 @@ class helper_plugin_epub extends Dokuwiki_Plugin {
 		 io_saveFile($this->script_file,serialize($this->cache));	
 	}
 
-	
+    function delete_media($md5) {
+        $epub = $this->cache['current_books'][$md5]['epub'];
+        $file =  mediaFN($this->cache['current_books'][$md5]['epub']);
+        if(file_exists($file)) {
+            if(unlink($file)) {
+               return "Removed: " . $epub;
+            }
+            else return "error unlinking $epub";
+        }
+        return "File not found: " . $this->cache['current_books'][$md5]['epub'] ;
+    }
     function writeCache($id) {
          if(!$this->is_inCache($id)) {
             $this->cache[md5($id)] = $id;

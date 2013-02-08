@@ -35,6 +35,7 @@
         function create_ebook_button($event,$param) {
              global $INFO;
              global $ACT;
+             if(!$this->getConf('permalink')) return;
              if($ACT != 'show') return;
             $this->helper = $this->loadHelper('epub', true);
 			if (!$this->helper->is_inCache($INFO['id']))  return;

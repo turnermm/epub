@@ -427,8 +427,9 @@ NAVPOINT;
 				}
 			} 
 			else echo "ziparchive used\n";
-            
+            $plugin =& plugin_load('syntax','epub');            
 			$oldname = $meta . 'my-book.epub';	        
+            $rmdir= $plugin->getConf('rmdir');
 			$epub_file = strtolower(date("Y_F_j_h-i-s") ) . '.epub';			
 			$newname = mediaFN("epub:$user:$epub_file");           
 			if(rename ($oldname , $newname )) {
@@ -440,6 +441,25 @@ NAVPOINT;
                 $helper->addBook($id,$epub_id,$title);
 			    echo "New Ebook: $epub_id\n" ;
 			}
+           
+             if($rmdir == 'y') {                             
+                if(epub_isWindows()) {
+                  $meta = str_replace('/','\\',$meta);
+                   $cmd = "RMDIR /s /q $meta";                                     
+                }
+                else { 
+                    $cmd ="rm -f -r $meta";
+                }                
+                 
+                system($cmd,$retval);                
+                if($retval)  {
+                   echo "unable to remove dir:<br />&nbsp;&nbsp;$meta<br />&nbsp;&nbsp;error code: $retval\n";
+                 }
+                 else {
+                     echo "$cmd\n";
+                 }
+             }                   
+            
 		}	 
 		
         function epub_pack_ZipLib($meta) {

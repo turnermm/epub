@@ -84,3 +84,22 @@ function epub_check_progress(client,user) {
         },
         15000);
 }	  
+
+function epub_admin_confirm(which) {
+ 
+    var f =document.epub_admin;
+    var epubs = new Array();    
+    var msg="";    
+    for(var i=0; i < f.length; i++) {  
+         if(f[i].checked) {
+             matches =  f[i].name.match(/\[([a-z0-9]+)\]/);
+             msg += f[i].value + "\n" ;           
+         }         
+    }
+    var confirm_msg = "Please confirm that you want to delete the following cache entries"; 
+    if(which == 'media') {
+       confirm_msg +=" and their ebooks";     
+    }
+    if(!confirm(confirm_msg + ":\n" + msg)) return false;
+    return true;
+}    
