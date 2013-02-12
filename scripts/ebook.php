@@ -60,6 +60,7 @@
 			$result .= "\n<head>\n";
 			$result .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>' ."\n";
 			$result .= '<link rel="stylesheet"  type="text/css" href="../Styles/style.css"/>';
+            epub_check_for_mathjax($result);
 			$result .= "\n<title>";
 			$result .= "</title>\n</head><body>\n";
 			$result .= "<div class='dokuwiki'>\n";
