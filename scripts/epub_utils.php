@@ -530,21 +530,27 @@ NAVPOINT;
 				
 			}
 		}	
-	    function epub_check_for_mathjax(&$result) {
+
+ 	    function epub_check_for_mathjax(&$result) {
+             
              if(epub_is_installed_plugin('mathjax_protecttex') ) {        
+             $plugin =& plugin_load('syntax','mathjax_protecttex');
+             $url = $plugin->getConf('url');
+             $config = $plugin->getConf('config');
+             echo "$url\n";
 $result .= <<<MATHJAX
-<script type="text/x-mathjax-config" charset="utf-8">/*<![CDATA[*/MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
-        processEscapes: true
-    }
-});
+
+<script type="text/x-mathjax-config" charset="utf-8">/*<![CDATA[*/
+$config
+}
+);
 /*!]]>*/</script>
-<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript" charset="utf-8" src="$url"></script>
+
 MATHJAX;
             }
         }
+     
 		
         function epub_save_namespace($ns="") {
            static $namespace;
