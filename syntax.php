@@ -64,7 +64,7 @@
 			global $INFO;
 
 			if($mode == 'xhtml'){
-				
+				$renderer->nocache();
 				list($state, $match) = $data;
 				
 				switch ($state) {

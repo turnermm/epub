@@ -537,7 +537,7 @@ NAVPOINT;
              $plugin =& plugin_load('syntax','mathjax_protecttex');
              $url = $plugin->getConf('url');
              $config = $plugin->getConf('config');
-             echo "$url\n";
+            // echo "$url\n";
 $result .= <<<MATHJAX
 
 <script type="text/x-mathjax-config" charset="utf-8">/*<![CDATA[*/
