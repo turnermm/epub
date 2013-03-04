@@ -9,7 +9,7 @@
 	require_once(DOKU_PLUGIN.'action.php');
 	
 	class action_plugin_epub extends DokuWiki_Action_Plugin {
-		
+		private $helper;
 		/**
 			* Return some info
 		*/
@@ -23,6 +23,7 @@
 		*/
 		function register($controller) { 
 			$controller->register_hook( 'TPL_METAHEADER_OUTPUT', 'AFTER', $this, 'loadScript');
+            $controller->register_hook('TPL_ACT_RENDER', 'BEFORE', $this, 'create_ebook_button');
 			$controller->register_hook('TPL_ACT_RENDER', 'AFTER', $this, 'get_epub');
 			$controller->register_hook('TPL_ACT_RENDER', 'BEFORE', $this, 'check_scriptLoaded');
 		}
@@ -30,6 +31,30 @@
 		/**
 	
 		*/
+
+        function create_ebook_button($event,$param) {
+             global $INFO;
+             global $ACT;
+             if(!$this->getConf('permalink')) return;
+             if($ACT != 'show') return;
+            $this->helper = $this->loadHelper('epub', true);
+			if (!$this->helper->is_inCache($INFO['id']))  return;
+            
+            $auth = auth_quickaclcheck($INFO['id']);
+            if($auth) {
+                $page_data = $this->helper->get_page_data($INFO['id']);    
+                if(!$page_data) return;
+                $ebook = $page_data['epub'];
+                $link = ml($ebook);
+                $title = $page_data['title'];                
+                echo  $this->getLang('download');  //The most recent ebook for this page is:
+                echo " <a href='$link' title='$title'>$title ($ebook)</a>.<br />";
+                echo  $this->getLang('download_click');   // To download it, click on the link. 
+                echo $this->getLang('download_alt');    //    If you have an ebook reader plugin installed, right-click on the link and select 'Save . . . As'.";
+            }
+
+          
+        }
 		function get_epub($event, $param) {
 			global $ID;
 			global $USERINFO;
@@ -37,15 +62,21 @@
 			$user = $USERINFO['name'];			
 			global $ACT;
 			global $INFO;
+           
 			if($ACT != 'show') return;			 
-			$helper = $this->loadHelper('epub', true);
-			if (!$helper->is_inCache($INFO['id']))  return;  //cache set in syntax.php 
+            if(!$this->helper) {
+			    $this->helper = $this->loadHelper('epub', true);
+            }
+			if (!$this->helper->is_inCache($INFO['id']))  return;  //cache set in syntax.php 
+            
 			if(strpos($INFO['id'],'epub') === false) return;
 			$wiki_file = wikiFN($INFO['id']);
 			if(!@file_exists($wiki_file)) return;
-	                $epub_group = $this->getConf('group');
+	            $epub_group = $this->getConf('group');
         		$groups=$USERINFO['grps'];
 			$auth = auth_quickaclcheck('epub:*');
+            
+            
 			if($auth < 8 && !in_array($epub_group,$groups)) return;
 			$auth = auth_quickaclcheck($INFO['id']);
 			if($auth < 4) return;

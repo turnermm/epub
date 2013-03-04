@@ -1,0 +1,6 @@
+===== Instructions =====
+Using this tool, you can delete entries from the epub cache and, if you choose, you can also delete the associated ebooks from the media directory.
+Select one or more titles.  If you click the **Cache Only** button, those titles will be removed from the cache.  If you click the **Cache and Ebook(s)** button, the
+titles will be removed from the cache and their associated ebooks will be deleted from the media directory.   The latter will work only if you have left the epub
+files in tact on the server.
+

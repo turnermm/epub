@@ -1,6 +1,7 @@
 <?php	
 	if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../../../').'/');	
-	if(!defined('EPUB_DIR')) define('EPUB_DIR',realpath(dirname(__FILE__).'/../').'/');		
+	if(!defined('EPUB_DIR')) define('EPUB_DIR',realpath(dirname(__FILE__).'/../').'/');	
+	require_once(EPUB_DIR.'/helper.php');
 			/**
 			utilities
 			*/
@@ -161,9 +162,9 @@ FOOTER;
 	         static $dir;
              global $conf;			
 			 if(!$dir) {
-			     $dir = init_path($conf['savedir']) . '/media/';			
+			     $dir = init_path($conf['savedir']) . '/media/';			              
 			 }
-			 
+			             
 			 return $dir;
 			 
 	   }
@@ -316,7 +317,7 @@ HEADER;
   <navLabel>
 	<text>$title</text>
   </navLabel>
-  <content src="$page"/>
+  <content src="Text/$page"/>
 </navPoint>
 NAVPOINT;
              fwrite($opf_handle,"$navpoint\n");
@@ -365,7 +366,7 @@ NAVPOINT;
 		    $dir=epub_get_metadirectory();
 		    $meta = $dir . 'META-INF';
 		    $oebps = epub_get_oebps(); 
-			$media_dir = epub_get_data_media() . 'epub';
+			$media_dir = epub_get_data_media() . 'epub';         
             io_mkdir_p($meta);
 			io_mkdir_p($oebps);			
             io_mkdir_p($oebps . 'Images/');			
@@ -373,10 +374,11 @@ NAVPOINT;
 			io_mkdir_p($media_dir);
             io_mkdir_p($oebps . 'Styles/');			
 		     if(isset($_POST['client'])) {
-				  $user= cleanID(rawurldecode($_POST['client'])) . '/';
+				  $user= cleanID(rawurldecode($_POST['client'])). '/';				  
 				  io_mkdir_p($media_dir. '/'. $user);
 			  }
-			
+			$book_id = cleanID(rawurldecode($_POST['book_page']));       
+         
 			copy(EPUB_DIR . 'scripts/package/my-book.epub', $dir . 'my-book.epub');
 			copy(EPUB_DIR . 'scripts/package/container.xml', $dir . 'META-INF/container.xml');	
 			if(!$user_title) {
@@ -425,15 +427,39 @@ NAVPOINT;
 				}
 			} 
 			else echo "ziparchive used\n";
-            
+            $plugin =& plugin_load('syntax','epub');            
 			$oldname = $meta . 'my-book.epub';	        
+            $rmdir= $plugin->getConf('rmdir');
 			$epub_file = strtolower(date("Y_F_j_h-i-s") ) . '.epub';			
-			$newname = mediaFN("epub:$user:$epub_file");
-            
+			$newname = mediaFN("epub:$user:$epub_file");           
 			if(rename ($oldname , $newname )) {
-				$epub_id = cleanID("epub:$user:$epub_file");
-				echo "New Ebook: $epub_id\n";
+                $epub_id = cleanID("epub:$user:$epub_file");           
+               	$helper = new  helper_plugin_epub();	
+                $id = cleanID(rawurldecode($_POST['book_page']));
+                echo "ebook id=$id\n";
+                $title=rawurldecode($_POST['title']);
+                $helper->addBook($id,$epub_id,$title);
+			    echo "New Ebook: $epub_id\n" ;
 			}
+           
+             if($rmdir == 'y') {                             
+                if(epub_isWindows()) {
+                  $meta = str_replace('/','\\',$meta);
+                   $cmd = "RMDIR /s /q $meta";                                     
+                }
+                else { 
+                    $cmd ="rm -f -r $meta";
+                }                
+                 
+                system($cmd,$retval);                
+                if($retval)  {
+                   echo "unable to remove dir:<br />&nbsp;&nbsp;$meta<br />&nbsp;&nbsp;error code: $retval\n";
+                 }
+                 else {
+                     echo "$cmd\n";
+                 }
+             }                   
+            
 		}	 
 		
         function epub_pack_ZipLib($meta) {
@@ -453,7 +479,6 @@ NAVPOINT;
 		    static $installed_plugins;
 			if(!$installed_plugins) {
 		  	    $installed_plugins=plugin_list('syntax');
-			  // echo print_r($installed_plugins,true) . "\n";
 			}	
 			 if(in_array($which, $installed_plugins)) return true;
 			 return false;
@@ -482,7 +507,7 @@ NAVPOINT;
 			        $name=$renderer->copy_media($cache,true);		//copy the image to epub's OEBPS directory and enter it into opf file		    
 				    if($name) {
 				     	$regex = '#<img src=\"(.*?' . $data['md5'] . '.*?)\".*\/>#m';	// use the ditaa  plugin's md5 identifier to replace correct image	
-					    $replace = '<img src="' . $name . '" />';							
+					    $replace = '<img src="../' . $name . '" />';							
 					    $xhtml = preg_replace($regex,$replace,$xhtml);
 				    }
 			    }	
@@ -499,56 +524,43 @@ NAVPOINT;
 				 $cache = getcachename($matches[1], '.mathpublish.png');
 				 $name=$renderer->copy_media($cache,true);
 			
-				 $name = 'src="' . $name . '" ' ;
+				 $name = 'src="../' . $name . '" ' ;
 				 $regex = '#src\s*=.*?mathpublish\/img.php\?img=([a-f0-9]+)\"#';
 				 $xhtml = preg_replace($regex, $name ,$xhtml );
 				
 			}
 		}	
-		
-	    function epub_check_for_include(&$text) {
-		    $regex = '#\{\{page>(.*?)\}\}#m';			
-			if(!preg_match_all($regex,$text,$matches)) return;		
-		    $text= preg_replace_callback($regex, 'epub_replace_include', $text);
-		}	
-		
-       function epub_replace_include($matches) {
-            list($id,$rest) = explode('&',$matches[1]);
-            list($id,$hash) = explode('#',$id);
-            $wiki_file = wikiFN($id);
-            if(!file_exists($wiki_file)) {
-                return "";
-            }
-			
-            if($hash) {
-                $text = "";
-                $header = str_replace('_', ' ', $hash);
-                //echo "Include '$id#$header'\n";
-                $regex = "#(=+)\s*$header#i";
-                $level = 0;
-                $lines = file($wiki_file);
 
-                foreach($lines as $line) {
-                    if(!$text && preg_match($regex,$line,$matches)) {
-                         $text = $line;
-                         $level= strlen($matches[1]);
-                         continue;
-                    }
-                   if($level && strpos($line,'=') !==false) {
-                          preg_match('#(=+)#',$line,$matches);
-                          if(strlen($matches[1]) >= $level) break;
-                    }
-                    if($level)     $text .= $line;
-                }
-            }
-            else {
-                $text=io_readFile($wiki_file);
-            }
+ 	    function epub_check_for_mathjax(&$result) {
+             
+             if(epub_is_installed_plugin('mathjax_protecttex') ) {        
+             $plugin =& plugin_load('syntax','mathjax_protecttex');
+             $url = $plugin->getConf('url');
+             $config = $plugin->getConf('config');
+            // echo "$url\n";
+$result .= <<<MATHJAX
 
-            return "\n$text\n";
+<script type="text/x-mathjax-config" charset="utf-8">/*<![CDATA[*/
+$config
+}
+);
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="$url"></script>
+
+MATHJAX;
+            }
         }
+     
 		
-        function epub_checkfor_ns($name, &$pages, &$titles) {        
+        function epub_save_namespace($ns="") {
+           static $namespace;
+           if($ns !== false)  {
+              $namespace = $ns;
+           }   
+           return $namespace;
+        }
+
+        function epub_checkfor_ns($name, &$pages, &$titles) {
             $name = rtrim($name);
 
             $n = strrpos($name,'*',-1);
@@ -626,3 +638,9 @@ NAVPOINT;
             }   
 
         }    
+
+         function epub_check_perm($id) {          
+            $id= cleanID(rawurldecode($id));
+            $acl = auth_quickaclcheck($id);
+            return $acl;
+          }

@@ -1,7 +1,6 @@
 <?php
 	
 	if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../../../').'/');
-	if(!defined('NOSESSION')) define('NOSESSION',true); 
 	if(!defined('NL')) define('NL',"\n");
 	if(!defined('EPUB_DIR')) define('EPUB_DIR',realpath(dirname(__FILE__).'/../').'/');
 	require_once(DOKU_INC.'inc/init.php');
@@ -13,21 +12,27 @@
 		private $_renderer;
 		function create($id, $user_title=false) {
 			
-			ob_start();
-        	        $id = ltrim($id, ':');
-                        $id = ":$id";
-			$mode ='epub';
-			$Renderer =& plugin_load('renderer',$mode);	    
-			$Renderer->set_oebps() ;
-			$Renderer->set_current_page(str_replace(':', '@', $id) . '.html') ;
-			$this->_renderer = $Renderer;
+            ob_start();
+            $id = ltrim($id, ':');
+            $id = ":$id";         
+            $namespace= getNS($id);
+            epub_save_namespace($namespace);
+            $mode ='epub';
+            $Renderer =& plugin_load('renderer',$mode);	    
+            $Renderer->set_oebps() ;
+            $Renderer->set_current_page(str_replace(':', '@', $id) . '.html') ;
+            $this->_renderer = $Renderer;
             if(is_null($Renderer)){
                 msg("No renderer for $mode found",-1);  
                 exit;
             }
-					
 		
-			$id = $id;
+
+			global $ID;
+			$oldID = $ID;
+
+			$ID = cleanID($id);
+
 			$wiki_file = wikiFN($id);
 			if(!file_exists($wiki_file)) {
                  epub_push_spine(array("",""));
@@ -35,11 +40,7 @@
 				 return false;
 			}
             epub_update_progress("reading $id");
-			$text=io_readFile($wiki_file);
-			if(epub_is_installed_plugin('include_include') ) {
-			   epub_check_for_include($text);
-			}
-			$instructions = p_get_instructions($text);
+			$instructions = p_cached_instructions($wiki_file, false, $id);
 			if(is_null($instructions)) return '';
 			
 			
@@ -59,6 +60,7 @@
 			$result .= "\n<head>\n";
 			$result .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>' ."\n";
 			$result .= '<link rel="stylesheet"  type="text/css" href="../Styles/style.css"/>';
+            epub_check_for_mathjax($result);
 			$result .= "\n<title>";
 			$result .= "</title>\n</head><body>\n";
 			$result .= "<div class='dokuwiki'>\n";
@@ -94,10 +96,15 @@
             
 			if($user_title) {				
 			    epub_write_zip('Text/title.html');
+                $ID = $oldID;
 				return true;
 			}
 			$item_num=epub_write_item("Text/$id", "application/xhtml+xml");
 			epub_push_spine(array("Text/$id",$item_num));
+            epub_save_namespace();
+
+			$ID = $oldID;
+
 			return true;
 		}  
 		
@@ -130,7 +137,7 @@
             array_push($epub_titles,"Footnotes");
             epub_titlesStack($epub_titles);
             $page_num = 0;
-            foreach($epub_pages as $page) {			  
+            foreach($epub_pages as $page) {		
                 epub_update_progress("processing: $page");
                 $creator = new epub_creator();
                 if($creator->create($page)) {
