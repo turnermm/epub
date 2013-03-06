@@ -304,20 +304,20 @@ HEADER;
 	        }  
 		    $items = epub_push_spine();
 
-			array_unshift($items,array('title.html'));
+			array_unshift($items,array('Text/title.html'));
             $num = 0;
 			foreach($items as $page) {
 			    $num++;				
 			    $page = $page[0];	
                 $title=epub_titlesStack();
                 if(!$page) continue;
-              //  if($title) echo "found $title for $page\n";
+                if($title) echo "found $title for $page\n";
 				$navpoint=<<<NAVPOINT
  <navPoint id="np-$num" playOrder="$num">
   <navLabel>
 	<text>$title</text>
   </navLabel>
-  <content src="Text/$page"/>
+  <content src="$page"/>
 </navPoint>
 NAVPOINT;
              fwrite($opf_handle,"$navpoint\n");
