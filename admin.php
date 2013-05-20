@@ -3,7 +3,7 @@
  * 
  * Admin Panle for epub plugin
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Myron Turner <turnermm02@sahw.ca>
+ * @author     Myron Turner <turnermm02@shaw.ca>
  */
 
 class admin_plugin_epub extends DokuWiki_Admin_Plugin {

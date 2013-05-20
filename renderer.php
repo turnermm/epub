@@ -202,8 +202,8 @@
 					$fnote =  DOKU_URL .  "doku.php?id=$orig";	
 					return $this->set_footnote($link,$fnote);
 				}
-                $name = ltrim($name, '@');
-                $name = "@$name";
+                $name = ltrim($name, '_');
+                $name = "_$name";
 				$name .='.html';
                 if($link['class'] == 'wikilink2') {
                     $wfn =  wikiFN($orig);
@@ -276,13 +276,13 @@
 
             if($name) {
                 $orig = ltrim($name,':');               
-                return str_replace(':','@',$name);
+                return str_replace(':','_',$name);
             }
             return false;
         }
 	
 		function copy_media($media,$external=false) {
-			$name =  str_replace(':','@',basename($media));		
+			$name =  str_replace(':','_',basename($media));		
             $ret_name = $name;  
            
 			$mime_type = mimetype($name);
@@ -302,8 +302,8 @@
 				    $elems=explode('\\',$tmp);                       
 				}
                 if(count($elems && $elems[0])) {
-                    $elems[0] = preg_replace('#/\W#','@',$elems[0]);
-                    $name = $elems[0]. "@" . $name;
+                    $elems[0] = preg_replace('#/\W#','_',$elems[0]);
+                    $name = $elems[0]. "_" . $name;
                 }
             }
            

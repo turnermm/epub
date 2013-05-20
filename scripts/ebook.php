@@ -20,7 +20,7 @@
             $mode ='epub';
             $Renderer =& plugin_load('renderer',$mode);	    
             $Renderer->set_oebps() ;
-            $Renderer->set_current_page(str_replace(':', '@', $id) . '.html') ;
+            $Renderer->set_current_page(str_replace(':', '_', $id) . '.html') ;
             $this->_renderer = $Renderer;
             if(is_null($Renderer)){
                 msg("No renderer for $mode found",-1);  
@@ -90,7 +90,7 @@
                 $id = 'title.html';
             }
             else {
-            $id = str_replace(':', '@', $id) . '.html';
+            $id = str_replace(':', '_', $id) . '.html';
                }
              io_saveFile(epub_get_oebps() ."Text/$id",$result);
             
