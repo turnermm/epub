@@ -202,8 +202,8 @@
 					$fnote =  DOKU_URL .  "doku.php?id=$orig";	
 					return $this->set_footnote($link,$fnote);
 				}
-                $name = ltrim($name, '_');
-                $name = "_$name";
+              
+               $name = epub_clean_name($name);
 				$name .='.html';
                 if($link['class'] == 'wikilink2') {
                     $wfn =  wikiFN($orig);
@@ -276,13 +276,13 @@
 
             if($name) {
                 $orig = ltrim($name,':');               
-                return str_replace(':','_',$name);
+                return epub_clean_name(str_replace(':','_',$name));
             }
             return false;
         }
 	
 		function copy_media($media,$external=false) {
-			$name =  str_replace(':','_',basename($media));		
+			$name =  epub_clean_name(str_replace(':','_',basename($media)));		
             $ret_name = $name;  
            
 			$mime_type = mimetype($name);

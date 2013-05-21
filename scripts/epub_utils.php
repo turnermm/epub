@@ -644,3 +644,7 @@ MATHJAX;
             $acl = auth_quickaclcheck($id);
             return $acl;
           }
+          
+          function epub_clean_name($name) {
+              return ltrim($name,'_');
+          }          
