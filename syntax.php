@@ -15,7 +15,7 @@
             'date'   => '2011-07-1',
             'name'   => 'epub',
             'desc'   => 'ebook creator',
-            'url'    => 'http://www.doluwiki.org/plugin:epub');
+            'url'    => 'http://www.dokuwiki.org/plugin:epub');
 		} 
 		
 		function getType(){ return 'container'; }
