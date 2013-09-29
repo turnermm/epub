@@ -567,8 +567,11 @@ MATHJAX;
             if(!$n) return;
              array_shift($pages);  // remove namespace id:  namespace:*
        
-            $ns = wikiFN($name);
-            list($dir,$rest) = explode('.', $ns);                        
+            $ns = wikiFN($name.':tmp');
+
+            $path_parts= pathinfo($ns);
+            $dir = $path_parts['dirname'];
+            echo "Directory: $dir\n";    
             $paths = glob("$dir/*.txt");
             
              $_pages = array();
