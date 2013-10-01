@@ -238,6 +238,18 @@ HEADER;
 			return $handle;
 		}
 		
+        function epub_save_image($img,$fullpath){         
+          $command = "wget --quiet $img -O $fullpath";
+          $s = exec ($command, $output,$retv);
+           
+           if(!$retv && file_exists($fullpath)) {
+               return true;
+           }           
+           else echo "Cannot fetch $img\n";
+           
+          return false;
+        }		
+        
 	    function epub_write_item($url,$mime_type) {
 		   $item_num = epub_itemid() ;
            if(strpos($url, 'cover.png') !== false)  {

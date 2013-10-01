@@ -290,6 +290,7 @@
 			if($type !== 'image') return;
 			if($external) {  
                 if(!$this->allow_url_fopen) return;
+                $tmp =  str_replace('https://',"",$media);       
                 $tmp =  str_replace('http://',"",$media);
                 $tmp =  str_replace('www.',"",$tmp);
 				if($this->isWin) {
@@ -321,6 +322,10 @@
 				epub_write_item($name,$mime_type[1]) ;
 				return $name;
 			}
+            else if(!$this->isWin && epub_save_image($media ,  $file)) {
+            	epub_write_item($name,$mime_type[1]) ;
+				return $name;
+            }
 			return false;
 		}
 	
