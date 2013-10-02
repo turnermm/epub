@@ -243,6 +243,9 @@
  					$out = $link['name'];
 					$fn_id = epub_fn();
 					$link['name'] = "[$fn_id]";
+                    if(preg_match("/media\s*=\s*(http.*)/", $link['url'],$matches)) {   //format external  urls
+                        $note_url = urldecode($matches[1]);
+                    }
 					$link['url'] = 'footnotes.html#' .$this->current_page;					
 					$link['class'] = 'wikilink1';
                     $id = 'backto_' . $fn_id;
