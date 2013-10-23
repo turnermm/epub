@@ -10,13 +10,7 @@
 	
 	class action_plugin_epub extends DokuWiki_Action_Plugin {
 		private $helper;
-		/**
-			* Return some info
-		*/
-		function getInfo() {
-			return array();
-			//  return confToHash(dirname(__FILE__).'/plugin.info.txt');
-		}
+
 		
 		/**
 			* Register callbacks
