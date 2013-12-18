@@ -38,9 +38,6 @@ function epub_css_out($path)
     $tpl = trim(preg_replace('/[^\w-]+/','',$INPUT->str('t')));
     if(!$tpl) $tpl = $conf['template'];
 
-    // The generated script depends on some dynamic options
-    $cache = new cache('styles'.$_SERVER['HTTP_HOST'].$_SERVER['SERVER_PORT'].DOKU_BASE.$tpl.$type,'.css');
-
     // load styl.ini
     $styleini = css_styleini($tpl);
 
@@ -48,15 +45,6 @@ function epub_css_out($path)
     if (isset($config_cascade['userstyle']['default'])) {
         $config_cascade['userstyle']['screen'] = $config_cascade['userstyle']['default'];
     }
-
-    // cache influencers
-    $tplinc = tpl_basedir($tpl);
-    $cache_files = getConfigFiles('main');
-    $cache_files[] = $tplinc.'style.ini';
-    $cache_files[] = $tplinc.'style.local.ini'; // @deprecated
-    $cache_files[] = DOKU_CONF."tpl/$tpl/style.ini";
-    $cache_files[] = __FILE__;
-
 
     // Array of needed files and their web locations, the latter ones
     // are needed to fix relative paths in the stylesheets
@@ -79,18 +67,11 @@ function epub_css_out($path)
         if(isset($config_cascade['userstyle'][$mediatype])){
             $files[$mediatype][$config_cascade['userstyle'][$mediatype]] = DOKU_BASE;
         }
-
-        $cache_files = array_merge($cache_files, array_keys($files[$mediatype]));
     }
 
 
-    // check cache age & handle conditional request
-    // This may exit if a cache can be used
-    http_cached($cache->cache,
-                $cache->useCache(array('files' => $cache_files)));
+
     $css="";
-    // start output buffering
-  //  ob_start();
 
     // build the stylesheet
     foreach ($mediatypes as $mediatype) {
@@ -121,9 +102,6 @@ function epub_css_out($path)
                 break;
         }
     }
-    // end output buffering and get contents
- //   $css = ob_get_contents();
- //   ob_end_clean();
 
     // apply style replacements
     $css .= css_applystyle($css, $styleini['replacements']);
