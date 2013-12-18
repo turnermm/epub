@@ -137,6 +137,7 @@
             array_push($epub_titles,"Footnotes");
             epub_titlesStack($epub_titles);
             $page_num = 0;
+            $creator = false;
             foreach($epub_pages as $page) {		
                 epub_update_progress("processing: $page");
                 $creator = new epub_creator();
@@ -152,7 +153,7 @@
 				epub_close_footnotes();
 			}
 			
-            epub_css(); 
+            epub_css($creator); 
             epub_write_item('Styles/style.css',"text/css");
             epub_opf_write('</manifest>');
             epub_write_spine();

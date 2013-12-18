@@ -86,8 +86,21 @@ NCX;
 		return $matches[0];	   
 		}   
 		
-		function epub_css() {
-		    require_once('css2.php');  
+		function epub_css($plugin) {
+            $use_less = false;
+            if($plugin !== false) {
+               $r = $plugin->get_renderer();
+               $use_less = $r->getConf('less');               
+            }
+             
+            $css = 	(class_exists('lessc') && $use_less) ? 'css3.php' : 'css2.php';    
+            if($css ==  'css3.php') {
+                echo "Using LESS: $css\n";
+            } 
+            else {
+                echo   "Not using LESS, either not found or excluded by configuration: using $css\n";         
+            }    
+		    require_once($css);  
 		    epub_css_out(epub_get_oebps()); 
 		}
 	 
