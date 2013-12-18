@@ -1,0 +1,3 @@
+===== Instructions =====
+En utilisant cet outil, vous pouvez supprimer des entrée du cache d'epub et, si vous le choisissez, vous pouvez aussi supprimer les ebooks associé du dossier media.
+Choisissez un titre ou plus. Si vous cliquez sur le boutton **Cache Only**, ces titres seront supprimés du cache. Si vous cliquez sur le boutton **Cache and Ebook(s)**, les titres seront supprimés du cache, et les ebooks associés seront supprimés du dossier media. Cette deuxième option ne fonctionnera que si vous avez laissé les fichiers epub intacts sur le serveur.
