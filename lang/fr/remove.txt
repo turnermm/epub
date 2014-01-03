@@ -1,5 +1,5 @@
 Vous pouvez recréer ce live, en modifiant ses pages ou en changeant la liste ou l'ordre des pages, etc.  
-Cependant, quand vous avez fini avec ce livre, vous devriez supprimer son id de la liste des pages de création de livre.  
-Vous pouvez faire cela en cliquer sur le boutton ci-dessus: **Remove page from creator list**. Cela libérera l'identifiant de la page pour d'autres usages. 
-À moins que vous ne fassiez ceci, la page continuera d'afficher les bouttons **Start** et **Remove page. . .**, 
-même si vous avez supprimé la syntax epub de la page.
+Cependant, quand vous en aurez fini avec ce livre, vous devriez supprimer son id de la liste des pages de création de livre.  
+Vous pouvez faire cela en cliquer sur le boutton ci-dessus: **Supprimer la page de la liste de création**. Cela libérera l'identifiant de la page pour d'autres usages. 
+À moins que vous ne fassiez ceci, la page continuera d'afficher les bouttons **Commencer** et **Supprimer la page...**, 
+même si vous avez supprimé la syntaxe epub de la page.
