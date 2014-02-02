@@ -344,7 +344,8 @@
 	
         function plugin($name,$data) {		
 		
-		    if($name !='mathpublish' && $name !='ditaa') return parent::plugin($name,$data);
+		    if($name !='mathpublish' && $name !='ditaa' && $name !='graphviz') return parent::plugin($name,$data);
+           
 		    $mode ='xhtml';
 		    $renderer =p_get_renderer($mode );		
             $plugin =& plugin_load('syntax',$name);
@@ -358,6 +359,9 @@
 					
 					epub_check_for_math($renderer->doc,$this);					
 				}
+				else if($name =='graphviz') {	
+					epub_check_for_graphviz($renderer->doc,$this,$data,$plugin);					
+				}                
 				$this->doc .= $renderer->doc;
 		    }
         }

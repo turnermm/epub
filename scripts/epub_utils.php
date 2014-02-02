@@ -539,7 +539,16 @@ NAVPOINT;
 				
 			}			
 		}
-		
+        
+		function epub_check_for_graphviz(&$xhtml,$renderer,$data,$graphviz) {      
+              $cache  = $graphviz->_imgfile($data);        
+              if($cache) {        
+                 $name=$renderer->copy_media($cache,true);		//copy the image to epub's OEBPS directory and enter it into opf file		                      
+                 $regex = $regex = 'src=.*?'.$data['md5'] . '"' ;
+                 $xhtml = preg_replace('#' . $regex .'#',"src=\"../$name\"",$xhtml);
+            }
+       }
+       
 		function epub_check_for_math(&$xhtml,$renderer) {
 		    $regex='#mathpublish\/img.php\?img=([a-f0-9]+)\"#';
 			
