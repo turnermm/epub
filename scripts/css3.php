@@ -34,9 +34,8 @@ function epub_css_out($path)
         $type = '';
    
 
-    // decide from where to get the template
-    $tpl = trim(preg_replace('/[^\w-]+/','',$INPUT->str('t')));
-    if(!$tpl) $tpl = $conf['template'];
+
+    $tpl = $conf['template'];
 
     // load styl.ini
     $styleini = css_styleini($tpl);
@@ -85,9 +84,14 @@ function epub_css_out($path)
         }
 
 
+$xcl = 'plugins/popularity|usermanager |plugins/upgrade|plugins/acl|plugins/plugin|plugins/auth|plugins/config|plugins/revert|_imgdetail.css'
+. '|_media_popup.css|_media_fullscreen.css|_fileuploader.css|_toc.css|_search.css|_recent.css|_diff.css|_edit.css|_forms.css|_admin.css';
+
+
         // load files
         $css_content = '';
         foreach($files[$mediatype] as $file => $location){
+           if(preg_match('#' .$xcl . '#',$file)) continue;
             $display = str_replace(fullpath(DOKU_INC), '', fullpath($file));
             $css_content .= "\n/* XXXXXXXXX $display XXXXXXXXX */\n";
             $css_content .= css_loadfile($file, $location);
@@ -104,13 +108,20 @@ function epub_css_out($path)
     }
 
     // apply style replacements
-    $css .= css_applystyle($css, $styleini['replacements']);
+    $css = css_applystyle($css, $styleini['replacements']);
 
 
 
     // parse less
     $css = css_parseless($css);
 
+    $compress  = false;
+    $compress=$conf['plugin']['epub']['compress'];
+
+    if($compress) {
+        echo "cmpressing CSS\n";
+        $css = css_compress($css);
+    }
 
 
     // embed small images right into the stylesheet
@@ -162,10 +173,9 @@ function css_parseless($css) {
             'If you recently installed a new plugin or template it '.
             'might be broken and you should try disabling it again. ['.$msg.']';
 
-        echo "$error\n".
+        echo "$error\n";
 
         exit;
- //       return  $css;
     }
 }
 

@@ -3,5 +3,6 @@
  $lang['rmdir'] = "Remove scratch directory after the ebook has been created.";
  $lang['permalink'] = "Keep a permanent download link on the book creator page";
  $lang['less'] = "The LESS CSS compiler will be used if present, unless this option is set to false.";
+ $lang['compress'] = "Compress CSS style sheet.  Available only when LESS is used.";
  
  
