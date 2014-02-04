@@ -85,6 +85,7 @@ function epub_css_out($path)
 
 
 $xcl = 'plugins/popularity|usermanager |plugins/upgrade|plugins/acl|plugins/plugin|plugins/auth|plugins/config|plugins/revert|_imgdetail.css'
+. '|plugins/fckg|plugins/ckgedit' 
 . '|_media_popup.css|_media_fullscreen.css|_fileuploader.css|_toc.css|_search.css|_recent.css|_diff.css|_edit.css|_forms.css|_admin.css';
 
 

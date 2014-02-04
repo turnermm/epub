@@ -224,6 +224,11 @@ FOOTER;
 			if($current_page != $page) {
 			fwrite($handle,"<br/><h1><a name='$page' id='$page'>$page</a></h1>\n");
 			}			
+   
+            if(!preg_match("#\s*^https?/#",$url)) {
+                $url = preg_replace('#' . DOKU_BASE . '#',  DOKU_URL, $url);
+            }              
+        
 			$footnote = "<a href='$page#backto_$fn_id' class='wikilink1' title='$page'>[$fn_id]</a> <a href='$url'>$url</a><br />\n";
 			fwrite($handle,$footnote);
 			$current_page=$page;
