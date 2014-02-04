@@ -138,6 +138,9 @@
 			if(!$mime_type[1] ) {
 				list($url,$rest) = explode('?', $link['url']); 		      
 				$mime_type = mimetype($url);
+                if(!$mime_type[1]) {
+			    	$mime_type = mimetype($rest);
+                }
 			}
 			
 			if(!$mime_type[1]) {

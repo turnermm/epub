@@ -225,7 +225,7 @@ FOOTER;
 			fwrite($handle,"<br/><h1><a name='$page' id='$page'>$page</a></h1>\n");
 			}			
    
-            if(!preg_match("#\s*^https?/#",$url)) {
+            if(!preg_match("#https?#",$url)) {
                 $url = preg_replace('#' . DOKU_BASE . '#',  DOKU_URL, $url);
             }              
         
