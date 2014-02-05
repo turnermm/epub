@@ -136,10 +136,10 @@
 			
 			$mime_type = mimetype($link['title']);
 			if(!$mime_type[1] ) {
-				list($url,$rest) = explode('?', $link['url']); 		      
-				$mime_type = mimetype($url);
+				list($url,$rest) = explode('?', $link['url']); 		                      
+				$mime_type = mimetype($url);                
                 if(!$mime_type[1]) {
-			    	$mime_type = mimetype($rest);
+                    $mime_type = mimetype($rest);
                 }
 			}
 			
@@ -182,7 +182,12 @@
 						}                       
 						return $this->clean_image_link($link['name']);
 					}
-                          
+                     elseif(strpos($link['url'],'fetch.php') !== false) {
+                         if(preg_match('/src=\"(.*?)\"/',$link['name'],$matches)) {
+                             $link['name'] = '<a href="' . $matches[1] .'">' . $link['title'] . '</a>';                           
+                             return $this->clean_image_link($link['name']);
+                         }
+                    }                     
                     $link['name'] = $this->clean_image_link($link['name']);                   
                             
 					return $link['name'];

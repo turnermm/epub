@@ -224,7 +224,10 @@ FOOTER;
 			if($current_page != $page) {
 			fwrite($handle,"<br/><h1><a name='$page' id='$page'>$page</a></h1>\n");
 			}			
-   
+ 
+            $url = preg_replace("/\s*\(.*?\)\s*$/","",$url);
+  
+ 
             if(!preg_match("#https?#",$url)) {
                 $url = preg_replace('#' . DOKU_BASE . '#',  DOKU_URL, $url);
             }              
