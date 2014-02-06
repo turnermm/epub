@@ -1,0 +1,3 @@
+===== Útmutató =====
+Az eszköz használatával törölhetjük az epub-gyorsítótárat, és - ha kiválasztjuk -, ugyancsak törölhetjük a media könyvtárból a kapcsolódó e-könyveket is.
+Válasszunk ki egy vagy több címet. A **Csak a gyorsítótárból** gombra kattintva a kiválasztott címek törlődnek a gyorsítótárból. Ha a **Gyorsítótárból és e-könyve(ke)t** gombra kattintunk, akkor a kiválasztott címek a gyorsítótárból, és a hozzájuk kapcsolódó e-könyvek a media könyvtárból is törlésre kerülnek. Az utóbbi csak akkor működik, ha az epub-fájlokat érintetlenül hagytuk a kiszolgálón.
