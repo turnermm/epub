@@ -1,0 +1,5 @@
+Az e-könyvet úgy is elkészíthetjük, hogy módosítjuk az oldalait, vagy az oldallistát, vagy az oldalak sorrendjét, stb.  
+Ugyanakkor, ha elkészültünk a könyvvel, törölnünk kell az azonosítóját (ID) a könyvet alkotó oldalak listájáról.  
+Ezt a fentebbi **Oldal eltávolítása a készítési listából** gombra kattintva tehetjük meg. Ezzel felszabadítjuk az oldalazonosítót további felhasználáshoz. 
+Amíg ezt nem tesszük meg, az oldalon továbbra is megjelennek az **Indítás** és az **Oldal eltávolítása...** gombok még akkor is,  
+ha egyébként az oldalról töröltük az epub-szintaxist.
