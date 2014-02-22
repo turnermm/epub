@@ -1,3 +1,4 @@
-U kunt het boek opnieuw maken, door de pagina's te bewerken of de pagina inhoudsopgave of de volgorde van de pagina's te veranderen. Zodra u klaar bent met dit book, moet u het verwijderen van de lijst op de Book Creator pagina.
-U kunt dit doen door de bovenstaande knop te selecteren: **Verwijder pagina van de Creator List**. Dit makt het pagina id weer beschikbaar voor ander gebruik.
-Totdat u dit gedaan heeft, zal de pagina steeds de **Start** en **Remove page...**  knoppen tonen, zelfs indien U de epub syntax van de pagina heeft verwijderd.
+U kunt dit boek opnieuw maken door de pagina's te bewerken of de index te bewerken of de volorde te veranderen, etc.
+Als u het boek niet meer nodig heeft verwijder het dan van de lijst van de book creator pagina.
+Doe dit door te klikken op de knop hierboven : ** Verwijder pagina van de Creator lijst**. Dit maakt het pagina ID weer beschikbaar voor ander gebruik. 
+Totdat u dit doet, zal de pagina steeds de **Start** en **Verwijder panina ..** knoppen weergeven, ok indien u de epub syntax van de pagina heeft verwijderd. 
