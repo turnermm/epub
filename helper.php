@@ -76,6 +76,24 @@ class helper_plugin_epub extends Dokuwiki_Plugin {
          io_saveFile($this->script_file,serialize($this->cache));
     }
     
+    /**
+      * removes dokuwiki cache for page where Start button appears,
+      * so that Start can always be activated  
+    */
+    function delete_dw_cachefiles($id) {
+       global $conf;   
+       $data = wikiFN($id).$_SERVER['HTTP_HOST'].$_SERVER['SERVER_PORT'];
+       $_md5=md5($data);  
+       $file = $conf['cachedir'].'/'.$_md5{0}.'/'.$_md5;
+       $types = array('metadata','i','xhtml');
+       foreach ($types as $type) {
+          $name = $file . ".$type";
+           if(file_exists($name)) {
+               unlink($name);
+           }
+       }
+    }
+    
     function get_page_data($id) {
          $md5 = md5($id);
          if(isset($this->cache['current_books'][$md5])) {

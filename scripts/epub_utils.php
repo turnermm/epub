@@ -473,6 +473,7 @@ NAVPOINT;
                 $title=rawurldecode($_POST['title']);
                 $helper->addBook($id,$epub_id,$title);
 			    echo "New Ebook: $epub_id\n" ;
+                $helper->delete_dw_cachefiles($id);
 			}
            
              if($rmdir == 'y') {                             
