@@ -101,5 +101,12 @@ class helper_plugin_epub extends Dokuwiki_Plugin {
          }
          return false;
     }
+    
+    /** 
+    *  return configuration values
+    */
+    function get_conf($which) {
+        return $this->getConf($which);
+    }
 }
 	 

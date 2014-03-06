@@ -4,5 +4,5 @@
  $lang['permalink'] = "Keep a permanent download link on the book creator page";
  $lang['less'] = "The LESS CSS compiler will be used if present, unless this option is set to false.";
  $lang['compress'] = "Compress CSS style sheet.  Available only when LESS is used.";
- 
+ $lang['sort'] = 'By default files processed in namespaces will be sorted alphabetically; if this is set to false (unchecked), they will be processed in directory order (unsorted).';
  

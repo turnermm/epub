@@ -615,8 +615,12 @@ MATHJAX;
             $path_parts= pathinfo($ns);
             $dir = $path_parts['dirname'];
             echo "Directory: $dir\n";    
-            $paths = glob("$dir/*.txt");
-            
+            $paths = glob("$dir/*.txt",GLOB_NOSORT);
+            $helper = new  helper_plugin_epub();
+            if($helper->get_conf('sort')){
+                rsort($paths);
+            }
+            else { echo "not sorting files in namespace: $ns\n";}
              $_pages = array();
              $_titles = array();
             

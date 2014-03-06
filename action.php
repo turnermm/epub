@@ -20,6 +20,7 @@
             $controller->register_hook('TPL_ACT_RENDER', 'BEFORE', $this, 'create_ebook_button');
 			$controller->register_hook('TPL_ACT_RENDER', 'AFTER', $this, 'get_epub');
 			$controller->register_hook('TPL_ACT_RENDER', 'BEFORE', $this, 'check_scriptLoaded');
+            $controller->register_hook('PARSER_CACHE_USE', 'BEFORE', $this, 'prevent_cache');            
 		}
 		
 		/**
@@ -31,7 +32,9 @@
              global $ACT;
              if(!$this->getConf('permalink')) return;
              if($ACT != 'show') return;
+             if(!$this->helper) {             
             $this->helper = $this->loadHelper('epub', true);
+            }
 			if (!$this->helper->is_inCache($INFO['id']))  return;
             
             $auth = auth_quickaclcheck($INFO['id']);
@@ -93,6 +96,15 @@
 
 		}
 		
+	 function prevent_cache(&$event) {	
+     	  global $INFO;
+             if(!$this->helper) {             
+                $this->helper = $this->loadHelper('epub', true);
+            }          
+            if (!$this->helper->is_inCache($INFO['id']))  return;  //cache set in syntax.php 
+          $event->preventDefault();         
+     }
+     
     function loadScript(&$event) {
     echo <<<SCRIPT
     <script type="text/javascript">
