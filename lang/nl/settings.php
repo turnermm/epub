@@ -10,3 +10,4 @@ $lang['rmdir']                 = 'Verwijder de tijdelijke directory nadat het eb
 $lang['permalink']             = 'Bewaar de permanente download link op de Book Creator pagina.';
 $lang['less']                  = 'De LESS CSS compiler zal , indien aanwezig, worden gebruikt, tenzij deze instelling van toepassing is.';
 $lang['compress']              = 'Comprimeer CSS style sheet. Alleen beschikbaar indien LESS is toegepast.';
+$lang['sort']                  = 'Standaard worden bestanden in een namespace alfabetisch geordend; als dit als niet waar (niet geselecteerd) wordt ingesteld, dan worden bestanden in directory volgorde ( ongesorteerd) verwerkt.';
