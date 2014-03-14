@@ -1,0 +1,5 @@
+Du kannst dieses Buch neu-erstellen, indem du die Seiten bearbeitest, die Seitenliste änderst, oder die Reihenfolge der Seiten änderst, etc.  
+Wenn du das Buch fertiggestellt hast, solltest du seine ID von der Liste der zu-bearbeitenden Bücher entfernen.   
+Das kannst du mit einem Klick auf den Button "Seite von Bearbeitungs-Liste entfernen" machen. Dadurch wird die ID für andere Autoren freigegeben. 
+Bis du das machst, werden auf der Seite weiterhin die Buttons **Start** und **Seite entfernen...** erscheinen, 
+selbst wenn du die epub-Syntax von der Seite entfernt hast.
