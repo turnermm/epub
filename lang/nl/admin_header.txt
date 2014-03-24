@@ -1,3 +1,5 @@
 ===== Instructies =====
-Met behulp van dit gereedschap kunnen toevoegingen aan de epub cache worden verwijderd en, in indien gewenst, kunnen ook de geassocieerde ebooks worden verwijderd uit de media directory. 
-Selecteer een of meerdere bestanden. Bij de keuze **Cache Only** worden de gekozen titels verwijderd uit de cache. Bij de keuze **Cache and Ebook(s)** worden zowel de titels uit de cache en de geassocieerde ebooks uit de media directory verwijderd. Het laatste werkt alleen als de epub bestanden op de server aanwezig zijn.
+Met behulp van dit gereedschap kunnen toevoegingen aan de epub cache worden verwijderd en, indien gewenst, kunnen ook de geassocieerde ebooks worden verwijderd uit de media directory.
+Selecteer een of meerdere bestanden.  Bij de keuze **Cache Only** worden de gekozen titels verwijderd uit de cache.  Bij de keuze **Cache and Ebook(s)** worden zowel de 
+titels uit de cache en de geassocieerde ebooks uit de media directory verwijderd.  Het laatste werkt alleen als de epub bestanden
+op de server aanwezig zijn.
