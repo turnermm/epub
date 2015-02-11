@@ -19,7 +19,7 @@
 		} 
 		
 		function getType(){ return 'container'; }
-		function getPType(){ return 'normal'; }
+		function getPType(){ return 'block'; }
 		function getAllowedTypes() { 
 			return array();
 		}

@@ -91,7 +91,7 @@
        $button_name = $this->getLang('button_remove');
        $button="<p><form class='button'>";       
        $button .= "<div class='no' id='epub_remove_button'><input type='button' value='$button_name' class='button' title='start'  onclick=\"epub_remove_creator('$id');\"/></div></form>";
-	   $button .= '</br>'. $this->locale_xhtml('remove') . '</p>'; 	   
+	   $button .= '</br>'. $this->locale_xhtml('remove'); 	   
        echo $button;
 
 		}
