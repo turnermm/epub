@@ -79,6 +79,7 @@
 			if(!$title) $title = $src;
 		    $external = false;       
             $src = trim($src);
+            $out = "";
             if(strpos($src,'http://') === 0) $external = true;
             if($external && !$this->allow_url_fopen)  {
                 $link = $this->create_external_link($src);
@@ -230,7 +231,7 @@
 			}
 			elseif($link['class'] != 'media') {   //  or urlextern	or samba share or . . .	
                 $out = $this->set_footnote($link,trim($link['url']));		// creates an entry in output for the link  with a live footnote to the link	
-                if($link['type'] == 'ext_media') {
+                if(isset($link['type']) && $link['type'] == 'ext_media') {
                     $this->doc .= $out;
                 }
                 else return $out;			  
