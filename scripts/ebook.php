@@ -36,7 +36,7 @@
 			$wiki_file = wikiFN($id);
 			if(!file_exists($wiki_file)) {
                  epub_push_spine(array("",""));
-			     echo "$id not found\n";
+			     echo htmlentities($id) . " not found\n";
 				 return false;
 			}
             epub_update_progress("reading $id");
@@ -115,10 +115,10 @@
 			
 	}	
 	       
-           
+           global $INPUT;
             // $epub_ids = 'ditaa:win_filebrowser;;introduction;;v06;;features;;index:site_inx';  
-            if(isset ($_POST['epub_ids'])) $epub_ids = rawurldecode($_POST['epub_ids']);
-            if(isset ($_POST['epub_titles'])) $e_titles = rawurldecode($_POST['epub_titles']);
+            if(isset ($_POST['epub_ids'])) $epub_ids = rawurldecode($INPUT->post->str('epub_ids'));
+            if(isset ($_POST['epub_titles'])) $e_titles = rawurldecode($INPUT->post->str('epub_titles'));
 			$epub_pages =  explode(';;',$epub_ids) ;
             $epub_titles = explode(';;',$e_titles) ;
             $epub_user_title = strpos($epub_pages[0], 'title') !== false ? true: false;
