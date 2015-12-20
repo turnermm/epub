@@ -15,7 +15,7 @@
 		/**
 			* Register callbacks
 		*/
-		function register($controller) { 
+		function register(Doku_Event_Handler $controller) { 
 			$controller->register_hook( 'TPL_METAHEADER_OUTPUT', 'AFTER', $this, 'loadScript');
             $controller->register_hook('TPL_ACT_RENDER', 'BEFORE', $this, 'create_ebook_button');
 			$controller->register_hook('TPL_ACT_RENDER', 'AFTER', $this, 'get_epub');
