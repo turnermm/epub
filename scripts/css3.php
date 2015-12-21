@@ -63,8 +63,10 @@ function epub_css_out($path)
             $files[$mediatype] = array_merge($files[$mediatype], $styleini['stylesheets'][$mediatype]);
         }
         // load user styles
-        if(isset($config_cascade['userstyle'][$mediatype])){
-            $files[$mediatype][$config_cascade['userstyle'][$mediatype]] = DOKU_BASE;
+        if(!empty($config_cascade['userstyle'][$mediatype])) {
+            foreach($config_cascade['userstyle'][$mediatype] as $userstyle) {
+                $files[$mediatype][$userstyle] = DOKU_BASE;
+            }
         }
     }
 
