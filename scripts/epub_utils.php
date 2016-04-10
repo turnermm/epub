@@ -579,8 +579,11 @@ NAVPOINT;
              if(epub_is_installed_plugin('mathjax_protecttex') ) {        
              $plugin =& plugin_load('syntax','mathjax_protecttex');
              $url = $plugin->getConf('url');
+              if(preg_match("#^//#",$url)) {
+                  $url = "http:" . $url;
+              }
              $config = $plugin->getConf('config');
-            // echo "$url\n";
+             
 $result .= <<<MATHJAX
 
 <script type="text/x-mathjax-config" charset="utf-8">/*<![CDATA[*/

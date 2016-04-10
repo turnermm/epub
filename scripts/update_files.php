@@ -8,7 +8,7 @@
 	$helper = new  helper_plugin_epub();	
 	$id = rawurldecode($INPUT->str('remove'));
     if(!$helper->is_inCache($id)) {
-	  echo htmlentities($id) . "is not in the book creator list; you may use it for other purposes.\n";
+	  echo htmlentities($id) . " is not in the book creator list; you may use it for other purposes.\n";
 	  echo "To restore it to the list you must make an edit, no matter how small, and re-save the page.";
 	  exit;
 	}
