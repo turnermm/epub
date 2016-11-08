@@ -36,7 +36,7 @@
 		function __construct() {
 		    $this->helper =& plugin_load('helper', 'epub');
 		}
-		function handle($match, $state, $pos, &$handler) {		 
+		function handle($match, $state, $pos, Doku_Handler $handler) {		 
             $match = str_replace(';','&#59;',$match);		  
 		    $match = str_replace(',','&#44;',$match);
             
@@ -60,7 +60,7 @@
 			}
 		}
 		
-		function render($mode, &$renderer, $data) {
+		function render($mode, Doku_Renderer $renderer, $data) {
 			global $INFO;
 
 			if($mode == 'xhtml'){
