@@ -403,6 +403,7 @@ NAVPOINT;
             io_mkdir_p($meta);
 			io_mkdir_p($oebps);			
             io_mkdir_p($oebps . 'Images/');			
+            io_mkdir_p($oebps . 'Audio/');			
             io_mkdir_p($oebps . 'Text/');			
 			io_mkdir_p($media_dir);
             io_mkdir_p($oebps . 'Styles/');			

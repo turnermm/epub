@@ -90,6 +90,9 @@
 			if(strpos($mtype[1],'image') !== false)       {	             
 				$out .= $this->set_image($src,$width,$height,$align);                
 			}
+            else if(strpos($mtype[1],'audio') !== false)       {	             
+				$out .= $this->set_audio($src,$mtype,$title) ;
+			}
 			else {		 		 
 				$out .= "<a href='$src'>$title</a>";
 			}
@@ -290,7 +293,7 @@
            
 			$mime_type = mimetype($name);
 			list($type,$ext) = explode('/', $mime_type[1] );
-			if($type !== 'image') return;
+			if($type !== 'image' && $type != 'audio')  return;
 			if($external) {  
                 if(!$this->allow_url_fopen) return;
                 $tmp =  str_replace('https://',"",$media);       
@@ -310,8 +313,10 @@
                     $name = $elems[0]. "_" . $name;
                 }
             }
-           
-            if(!preg_match("/^Images/", $name)) {
+          if($type == 'audio') {
+               $name = "Audio/$name";		
+           }
+           else if(!preg_match("/^Images/", $name)) {
                 $name = "Images/$name";			    
             }
 
@@ -344,7 +349,12 @@
             }			
 			return '<img src="' . $img . '"' .  "$h $w " . ' alt="'. $img . '" class="' .  $class . '" />';
 		}
-	
+        function set_audio($src,$mtype,$title) {          
+            $out = '<p><audio class="mediacenter" controls="controls">' . "\n";
+            $out .='<source src="' . $src . '" type="audio/mpeg" />' . 
+            "\n<a href='$src' title='$title'>$title</a></audio></p>\n";        
+            return $out;
+        }	
         function plugin($name,$data) {		
 		
 		    if($name !='mathpublish' && $name !='ditaa' && $name !='graphviz') return parent::plugin($name,$data);
