@@ -92,6 +92,8 @@
 			}
             else if(strpos($mtype[1],'audio') !== false)       {	             
 				$out .= $this->set_audio($src,$mtype,$title) ;
+                 list($title,$rest) = explode('(', $title);
+                 $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp3','title'=>$title,'name'=>$title,$src) );
 			}
 			else {		 		 
 				$out .= "<a href='$src'>$title</a>";
