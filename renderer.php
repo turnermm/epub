@@ -350,8 +350,10 @@
 			return '<img src="' . $img . '"' .  "$h $w " . ' alt="'. $img . '" class="' .  $class . '" />';
 		}
         function set_audio($src,$mtype,$title) {          
+            $src = "../$src";
+            $type = $mtype[1];
             $out = '<p><audio class="mediacenter" controls="controls">' . "\n";
-            $out .='<source src="' . $src . '" type="audio/mpeg" />' . 
+            $out .= "<source src= '$src' type='$type' />" .
             "\n<a href='$src' title='$title'>$title</a></audio></p>\n";        
             return $out;
         }	
