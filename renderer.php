@@ -17,6 +17,7 @@
 		private $current_page;
 		private $allow_url_fopen; 
 		private $isWin;
+        private $audio_link;
 		function getInfo() {
 			return array(
             'author' => 'Myron Turner',
@@ -30,7 +31,7 @@
 		function __construct() {     
             $this->allow_url_fopen=ini_get ( 'allow_url_fopen' ) ;			
             $this->isWin=function_exists('epub_isWindows') ? epub_isWindows() : false;
-			
+			$this->audio_link = $this->getConf('audio_fn');
 		}
 		
 		/**
@@ -88,12 +89,15 @@
 			$src = $this->copy_media($src,$external);			
 
 			if(strpos($mtype[1],'image') !== false)       {	             
-				$out .= $this->set_image($src,$width,$height,$align);                
+				$out .= $this->set_image($src,$width,$height,$align);           
 			}
             else if(strpos($mtype[1],'audio') !== false)       {	             
-				$out .= '<div style="text-align:center">' . $this->set_audio($src,$mtype,$title) ;   
+				if($this->audio_link)  $out .= '<div style="text-align:center">' ;
+               $out .= $this->set_audio($src,$mtype,$title) ;   
+                if($this->audio_link) {
                  list($title,$rest) = explode('(', $title);
-                $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp3','title'=>$title,'name'=>$title,$src) )  ."\n</div>";             
+                 $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp3','title'=>$title,'name'=>$title,$src) )  ."\n</div>";             
+			    }
 			}
 			else {		 		 
 				$out .= "<a href='$src'>$title</a>";
