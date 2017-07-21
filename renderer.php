@@ -91,9 +91,9 @@
 				$out .= $this->set_image($src,$width,$height,$align);                
 			}
             else if(strpos($mtype[1],'audio') !== false)       {	             
-				$out .= $this->set_audio($src,$mtype,$title) ;
+				$out .= '<div style="text-align:center">' . $this->set_audio($src,$mtype,$title) ;   
                  list($title,$rest) = explode('(', $title);
-                 $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp3','title'=>$title,'name'=>$title,$src) );
+                $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp3','title'=>$title,'name'=>$title,$src) )  ."\n</div>";             
 			}
 			else {		 		 
 				$out .= "<a href='$src'>$title</a>";
@@ -354,9 +354,9 @@
         function set_audio($src,$mtype,$title) {          
             $src = "../$src";
             $type = $mtype[1];
-            $out = '<p><audio class="mediacenter" controls="controls">' . "\n";
+            $out = '<audio class="mediacenter" controls="controls">' . "\n";
             $out .= "<source src= '$src' type='$type' />" .
-            "\n<a href='$src' title='$title'>$title</a></audio></p>\n";        
+            "\n<a href='$src' title='$title'>$title</a></audio>\n";        
             return $out;
         }	
         function plugin($name,$data) {		
