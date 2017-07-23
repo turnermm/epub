@@ -94,9 +94,15 @@
             else if(strpos($mtype[1],'audio') !== false)       {	             
 				if($this->audio_link)  $out .= '<div style="text-align:center">' ;
                $out .= $this->set_audio($src,$mtype,$title) ;   
-                if($this->audio_link) {
+                if($this->audio_link) {  // set audio footnote
                  list($title,$rest) = explode('(', $title);
-                 $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp3','title'=>$title,'name'=>$title,$src) )  ."\n</div>";             
+                     $mpfile = str_replace('Audio/',"",$src);                            
+                     $display_name = "";
+                     if($title != $mpfile) {
+                         $display_name = $title;
+                         $title = $mpfile;                     
+                     }
+                     $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp3','title'=>$title,'name'=>$title, 'display'=>$display_name) )  ."\n</div>";             
 			    }
 			}
 			else {		 		 
@@ -223,6 +229,9 @@
 			else if($type=='media') {  //internal media
 				$orig = "";				
 				$name = $this->local_name($link,$orig);			
+                if(!empty($link['display'])) {                
+                    $link['name'] = $name;                    
+                } 
 			    $note_url =  DOKU_URL .  "lib/exe/fetch.php?media=" . $orig;
                 $link['class'] = 'wikilink1';
 				$out = $this->set_footnote($link,$note_url);
