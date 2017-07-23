@@ -228,6 +228,7 @@
 				$name = $this->local_name($link,$orig);			
                 if(!empty($link['display'])) {                
                     $link['name'] = $link['display'];                    
+                    $orig = preg_replace('/^(audio|mpeg)_/', "$1:", $orig);
                 } 
 			    $note_url =  DOKU_URL .  "lib/exe/fetch.php?media=" . $orig;
                 $link['class'] = 'wikilink1';
