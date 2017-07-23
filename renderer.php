@@ -17,7 +17,9 @@
 		private $current_page;
 		private $allow_url_fopen; 
 		private $isWin;
-                private $audio_link;
+        private $audio_link;
+         private $audio_nmsp;
+         private $audio_nmsp_orig;
 	     function getInfo() {
 			return array(
             'author' => 'Myron Turner',
@@ -32,6 +34,11 @@
             $this->allow_url_fopen=ini_get ( 'allow_url_fopen' ) ;			
             $this->isWin=function_exists('epub_isWindows') ? epub_isWindows() : false;
 			$this->audio_link = $this->getConf('audio_fn');
+            $this->audio_nmsp = $this->getConf('audio_nmsp');
+            $this->audio_nmsp = str_replace(' ','',$this->audio_nmsp); 
+            $this->audio_nmsp = str_replace(',','|',$this->audio_nmsp); 
+            $this->audio_nmsp_orig = $this->audio_nmsp;
+            $this->audio_nmsp = str_replace(':','_',$this->audio_nmsp); 
 		}
 		
 		/**
@@ -228,7 +235,8 @@
 				$name = $this->local_name($link,$orig);			
                 if(!empty($link['display'])) {                
                     $link['name'] = $link['display'];                    
-                    $orig = preg_replace('/^(audio|mpeg)_/', "$1:", $orig);
+                    $orig = preg_replace('/^(' .  $this->audio_nmsp  . ')_/', "$1:", $orig);
+                    $orig = preg_replace('/^(' .  $this->audio_nmsp_orig  . ')_/', "$1:", $orig);                  
                 } 
 			    $note_url =  DOKU_URL .  "lib/exe/fetch.php?media=" . $orig;
                 $link['class'] = 'wikilink1';
