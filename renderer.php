@@ -17,8 +17,8 @@
 		private $current_page;
 		private $allow_url_fopen; 
 		private $isWin;
-        private $audio_link;
-		function getInfo() {
+                private $audio_link;
+	     function getInfo() {
 			return array(
             'author' => 'Myron Turner',
             'email'  => 'turnermm02@shaw.ca',
@@ -28,7 +28,7 @@
             'url'    => 'http://www.dokuwiki.org/plugin:epub');
 		}
 		
-		function __construct() {     
+	    function __construct() {     
             $this->allow_url_fopen=ini_get ( 'allow_url_fopen' ) ;			
             $this->isWin=function_exists('epub_isWindows') ? epub_isWindows() : false;
 			$this->audio_link = $this->getConf('audio_fn');
@@ -97,11 +97,8 @@
                 if($this->audio_link) {  // set audio footnote
                  list($title,$rest) = explode('(', $title);
                      $mpfile = str_replace('Audio/',"",$src);                            
-                     $display_name = "";
-                     if($title != $mpfile) {
                          $display_name = $title;
                          $title = $mpfile;                     
-                     }
                      $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp3','title'=>$title,'name'=>$title, 'display'=>$display_name) )  ."\n</div>";             
 			    }
 			}
@@ -230,7 +227,7 @@
 				$orig = "";				
 				$name = $this->local_name($link,$orig);			
                 if(!empty($link['display'])) {                
-                    $link['name'] = $name;                    
+                    $link['name'] = $link['display'];                    
                 } 
 			    $note_url =  DOKU_URL .  "lib/exe/fetch.php?media=" . $orig;
                 $link['class'] = 'wikilink1';
