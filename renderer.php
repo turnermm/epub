@@ -109,6 +109,10 @@
                      $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp3','title'=>$title,'name'=>$title, 'display'=>$display_name) )  ."\n</div>";             
 			    }
 			}
+         else if(strpos($mtype[1],'video') !== false)       {	
+                echo print_r($mtype,1);
+                $out .= $this->set_video($src,$mtype,$title) ;   
+         }
 			else {		 		 
 				$out .= "<a href='$src'>$title</a>";
 			}
@@ -314,7 +318,7 @@
            
 			$mime_type = mimetype($name);
 			list($type,$ext) = explode('/', $mime_type[1] );
-			if($type !== 'image' && $type != 'audio')  return;
+			if($type !== 'image' && $type != 'audio' && $type != 'video')  return;
 			if($external) {  
                 if(!$this->allow_url_fopen) return;
                 $tmp =  str_replace('https://',"",$media);       
@@ -378,6 +382,16 @@
             "\n<a href='$src' title='$title'>$title</a></audio>\n";        
             return $out;
         }	
+
+        function set_video($src,$mtype,$title) {          
+            $src = "../$src";
+            $type = $mtype[1];
+            $out = '<video class="mediacenter" controls="controls">' . "\n";
+            $out .= "<source src= '$src' type='$type' />" .
+            "\n<a href='$src' title='$title'>$title</a></video>\n";        
+            return $out;
+        }	
+        
         function plugin($name,$data) {		
 		
 		    if($name !='mathpublish' && $name !='ditaa' && $name !='graphviz') return parent::plugin($name,$data);
