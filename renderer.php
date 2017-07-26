@@ -20,6 +20,9 @@
         private $audio_link;
          private $audio_nmsp;
          private $audio_nmsp_orig;
+         private $video_link;
+         private $video_nmsp;
+         private $video_nmsp_orig;         
 	     function getInfo() {
 			return array(
             'author' => 'Myron Turner',
@@ -33,12 +36,31 @@
 	    function __construct() {     
             $this->allow_url_fopen=ini_get ( 'allow_url_fopen' ) ;			
             $this->isWin=function_exists('epub_isWindows') ? epub_isWindows() : false;
+            $this->mpeg_settings('audio') ;
+            $this->mpeg_settings('video') ;
+		}
+
+        function mpeg_settings($which) {
+            if($which == 'audio') {
 			$this->audio_link = $this->getConf('audio_fn');
-            $this->audio_nmsp = $this->getConf('audio_nmsp');
-            $this->audio_nmsp = str_replace(' ','',$this->audio_nmsp); 
-            $this->audio_nmsp = str_replace(',','|',$this->audio_nmsp); 
-            $this->audio_nmsp_orig = $this->audio_nmsp;
-            $this->audio_nmsp = str_replace(':','_',$this->audio_nmsp); 
+                $nmsp = 'audio_nmsp';
+            }
+            else {
+                $this->video_link = $this->getConf('video_fn');
+                $nmsp = 'video_nmsp';
+            }      			
+            $nmsp = $this->getConf($nmsp);
+            $nmsp = str_replace(' ','',$nmsp); 
+            $nmsp = str_replace(',','|',$nmsp); 
+            $nmsp_orig = $nmsp;
+            $nmsp = str_replace(':','_',$nmsp); 
+            if($which == 'audio') {
+                $this->audio_nmsp = $nmsp;
+                $this->audio_nmsp_orig = $nmsp_orig;
+                return;
+            }
+            $this->video_nmsp = $nmsp;
+            $this->video_nmsp_orig = $nmsp_orig;
 		}
 		
 		/**
@@ -110,8 +132,15 @@
 			    }
 			}
          else if(strpos($mtype[1],'video') !== false)       {	
-                echo print_r($mtype,1);
+                     if($this->video_link)  $out .= '<div style="text-align:center">' ;$out .= '<div style="text-align:center">' ;         
                 $out .= $this->set_video($src,$mtype,$title) ;   
+                    if($this->video_link) {
+                          list($title,$rest) = explode('(', $title);
+                         $mpfile = str_replace('Video/',"",$src);                            
+                         $display_name = $title;
+                         $title = $mpfile;                     
+                         $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp4','title'=>$title,'name'=>$title, 'display'=>$display_name) )  ."\n</div>";             
+                    }
          }
 			else {		 		 
 				$out .= "<a href='$src'>$title</a>";
@@ -239,8 +268,14 @@
 				$name = $this->local_name($link,$orig);			
                 if(!empty($link['display'])) {                
                     $link['name'] = $link['display'];                    
+                    if(strpos($link['class'],'mp3') !== false) {                       
                     $orig = preg_replace('/^(' .  $this->audio_nmsp  . ')_/', "$1:", $orig);
-                    $orig = preg_replace('/^(' .  $this->audio_nmsp_orig  . ')_/', "$1:", $orig);                  
+                        $orig = preg_replace('/^(' .  $this->audio_nmsp_orig  . ')_/', "$1:", $orig);  //two levels deep
+                    }
+                    else if(strpos($link['class'],'mp4') !== false) {                        
+                        $orig = preg_replace('/^(' .  $this->video_nmsp  . ')_/', "$1:", $orig);
+                        $orig = preg_replace('/^(' .  $this->video_nmsp_orig  . ')_/', "$1:", $orig);                          
+                    }   
                 } 
 			    $note_url =  DOKU_URL .  "lib/exe/fetch.php?media=" . $orig;
                 $link['class'] = 'wikilink1';
@@ -341,6 +376,9 @@
           if($type == 'audio') {
                $name = "Audio/$name";		
            }
+          if($type == 'video') {
+               $name = "Video/$name";		
+           }           
            else if(!preg_match("/^Images/", $name)) {
                 $name = "Images/$name";			    
             }

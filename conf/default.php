@@ -7,3 +7,5 @@ $conf['compress'] = 0;
 $conf['sort'] = 1;
 $conf['audio_fn'] = 1;
 $conf['audio_nmsp']='audio,mpeg';
+$conf['video_fn'] = 1;
+$conf['video_nmsp']='video,mpeg';

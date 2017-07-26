@@ -7,3 +7,4 @@
  $lang['sort'] = 'By default files processed in namespaces will be sorted alphabetically; if this is set to false (unchecked), they will be processed in directory order (unsorted).';
  $lang['audio_fn'] = 'When  using audio files, include the name of the audio file and footnote link to the audio file itself beneath the controls';
  $lang['audio_nmsp'] = 'Comma separated list of namespaces where audio files will be found.  These can be up to two levels deep. Used only when creating footnotes.';
+ $lang['video_nmsp'] = 'Comma separated list of namespaces where video files will be found.  These can be up to two levels deep. Used only when creating footnotes.';
