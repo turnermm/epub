@@ -376,7 +376,7 @@
           if($type == 'audio') {
                $name = "Audio/$name";		
            }
-          if($type == 'video') {
+          else if($type == 'video') {
                $name = "Video/$name";		
            }           
            else if(!preg_match("/^Images/", $name)) {
