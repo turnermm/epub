@@ -5,6 +5,8 @@
  $lang['less'] = "The LESS CSS compiler will be used if present, unless this option is set to false.";
  $lang['compress'] = "Compress CSS style sheet.  Available only when LESS is used.";
  $lang['sort'] = 'By default files processed in namespaces will be sorted alphabetically; if this is set to false (unchecked), they will be processed in directory order (unsorted).';
- $lang['audio_fn'] = 'When  using audio files, include the name of the audio file and footnote link to the audio file itself beneath the controls';
+$lang['audio_fn'] = 'When  using audio files, include the name of the audio file or its title and a footnote link to the audio file itself beneath the controls';
  $lang['audio_nmsp'] = 'Comma separated list of namespaces where audio files will be found.  These can be up to two levels deep. Used only when creating footnotes.';
- $lang['video_nmsp'] = 'Comma separated list of namespaces where video files will be found.  These can be up to two levels deep. Used only when creating footnotes.';
+$lang['video_nmsp'] = 'Comma separated list of namespaces where video files will be found.  These can be up to two levels deep. Used only when creating footnotes.';
+$lang['video_fn'] = 'When  using video files, include the name of the  file or its title and a footnote link to the video file itself beneath the controls';
+  
