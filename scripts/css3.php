@@ -10,10 +10,8 @@ if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../..
 if(!defined('NOSESSION')) define('NOSESSION',true); // we do not use a session or authentication here (better caching)
 if(!defined('DOKU_DISABLE_GZIP_OUTPUT')) define('DOKU_DISABLE_GZIP_OUTPUT',1); // we gzip ourself here
 if(!defined('EPUB_DIR')) define('EPUB_DIR',realpath(dirname(__FILE__).'/../').'/');		
-if(!defined('DOKU_TPL')) define('DOKU_TPL', DOKU_BASE.'lib/tpl/'.$conf['template'].'/'); 
-if(!defined('DOKU_TPLINC')) define('DOKU_TPLINC', DOKU_INC.'lib/tpl/'.$conf['template'].'/');
-require_once(DOKU_INC.'inc/init.php');
-
+require_once(DOKU_INC.'inc/init.php'); 
+if(!defined('DOKU_TPLINC')) define('DOKU_TPLINC', tpl_incdir());
 
 // ---------------------- functions ------------------------------
 
@@ -243,23 +241,6 @@ function css_styleini($tpl) {
         }
     }
 
-    // load template's style.local.ini
-    // @deprecated 2013-08-03
-    $ini = $incbase.'style.local.ini';
-    if(file_exists($ini)){
-        $data = parse_ini_file($ini, true);
-
-        // stylesheets
-        if(is_array($data['stylesheets'])) foreach($data['stylesheets'] as $file => $mode){
-            $stylesheets[$mode][$incbase.$file] = $webbase;
-        }
-
-        // replacements
-        if(is_array($data['replacements'])){
-            $replacements = array_merge($replacements, css_fixreplacementurls($data['replacements'],$webbase));
-        }
-    }
-
     // load configs's style.ini
     $webbase = DOKU_BASE;
     $ini = DOKU_CONF."tpl/$tpl/style.ini";
@@ -268,12 +249,12 @@ function css_styleini($tpl) {
         $data = parse_ini_file($ini, true);
 
         // stylesheets
-        if(is_array($data['stylesheets'])) foreach($data['stylesheets'] as $file => $mode){
+        if(isset($data['stylesheets']) && is_array($data['stylesheets'])) foreach($data['stylesheets'] as $file => $mode){
             $stylesheets[$mode][$incbase.$file] = $webbase;
         }
 
         // replacements
-        if(is_array($data['replacements'])){
+        if(isset($data['replacements']) && is_array($data['replacements'])){
             $replacements = array_merge($replacements, css_fixreplacementurls($data['replacements'],$webbase));
         }
     }
@@ -401,7 +382,7 @@ class DokuCssFile {
      * @return  string               the CSS/Less contents of the file
      */
     public function load($location='') {
-        if (!@file_exists($this->filepath)) return '';
+        if (!file_exists($this->filepath)) return '';
 
         $css = io_readFile($this->filepath);
         if (!$location) return $css;
@@ -423,13 +404,9 @@ class DokuCssFile {
 
         if (is_null($this->relative_path)) {
             $basedir = array(DOKU_INC);
-
-            // during testing, files may be found relative to a second base dir, TMP_DIR
-            if (defined('DOKU_UNITTEST')) {
-                $basedir[] = realpath(TMP_DIR);
-            }
-            $regex = '#^('.join('|',$basedir).')#';
-
+            
+            $basedir = array_map('preg_quote_cb', $basedir);
+            $regex = '/^('.join('|',$basedir).')/';
             $this->relative_path = preg_replace($regex, '', dirname($this->filepath));
         }
 
@@ -497,7 +474,6 @@ function css_datauri($match){
  * @author Andreas Gohr <andi@splitbrain.org>
  */
 function css_pluginstyles($mediatype='screen'){
-    global $lang;
     $list = array();
     $plugins = plugin_list();
     foreach ($plugins as $p){
