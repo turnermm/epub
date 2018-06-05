@@ -430,7 +430,7 @@
             return $out;
         }	
         
-        function plugin($name,$data) {		
+        function plugin($name,$data,$state = '', $match = '') {		
 		
 		    if($name !='mathpublish' && $name !='ditaa' && $name !='graphviz') return parent::plugin($name,$data);
            
@@ -457,7 +457,7 @@
 		/**
 			* no obfuscation for email addresses
 		*/
-		function emaillink($address, $name = NULL) {
+		function emaillink($address, $name = NULL,$returnonly = false) {
 			global $conf;
 			$old = $conf['mailguard'];
 			$conf['mailguard'] = 'none';
