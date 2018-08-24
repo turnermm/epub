@@ -56,6 +56,9 @@
 				call_user_func_array(array(&$Renderer, $instruction[0]),$instruction[1]);
 			}
 			$result = "";
+            $result .='<?xml version="1.0" encoding="utf-8"?>
+            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+            "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">';
 			$result .= '<html xmlns="http://www.w3.org/1999/xhtml">' . "\n";
 			$result .= "\n<head>\n";
 			$result .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>' ."\n";

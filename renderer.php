@@ -312,8 +312,8 @@
 					$link['url'] = 'footnotes.html#' .$this->current_page;					
 					$link['class'] = 'wikilink1';
                     $id = 'backto_' . $fn_id;
-					$hash_link="<a id='$id' name='$id'>";
-					$out .= $hash_link . parent::_formatLink($link) . '</a>';
+					$hash_link="<a id='$id' name='$id'></a>";
+					$out .= $hash_link . parent::_formatLink($link); // . '</a>';
 					epub_write_footnote($fn_id,$this->current_page,$note_url);
 					return $out;
 
