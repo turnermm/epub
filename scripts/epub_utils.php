@@ -59,8 +59,9 @@ OUTP;
 			flush();
 			
         $ncx=<<<NCX
-<!DOCTYPE ncx PUBLIC '-//NISO//DTD ncx 2005-1//EN' 'http://www.daisy.org/z3986/2005/ncx-2005-1.dtd'>
-<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="en">
+ <?xml version="1.0" encoding="utf-8" ?>      
+<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN"
+ "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd"><ncx version="2005-1" xml:lang="en" xmlns="http://www.daisy.org/z3986/2005/ncx/"> 
   <head>    
      <meta content="$url" name="dtb:uid"/>
     <meta content="1" name="dtb:depth"/>  
