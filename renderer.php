@@ -93,9 +93,9 @@
 		*/
 		function header($text, $level, $pos) {
 			if(!$text) return; //skip empty headlines
-			
+		    $hid = $this->_headerToLink($text, true);	           
 			// print header
-			$this->doc .= DOKU_LF."<h$level>";
+			$this->doc .= DOKU_LF."<h$level id='$hid'>";
 			$this->doc .= $this->_xmlEntities($text);
 			$this->doc .= "</h$level>".DOKU_LF;
 		}
@@ -247,7 +247,7 @@
             
 			if((strpos($link['class'],'wikilink') !== false ) && $type!='media') {  //internal link	
 				$orig = "";
-				$name = $this->local_name($link,$orig);			
+				$name = $this->local_name($link,$orig,$frag);			
 				if(!$this->is_epubid($orig)) {		    
 					$doku_base = DOKU_BASE;
 					$doku_base = trim($doku_base,'/');							
@@ -293,7 +293,7 @@
 			
 			if(!$name) return;
 			$link['url'] = $name;			
-
+            if($frag) $link['url'] .="#$frag";
 			return parent::_formatLink($link);
 		}
 		
@@ -330,9 +330,10 @@
              } 
          }        
         
-        function local_name($link,&$orig="") {
+        function local_name($link,&$orig="", &$frag ="") {
             $base_name= basename($link['url']);
             $title = $link['title']? ltrim($link['title'],':'): "";
+            list($starturl,$frag) = explode('#',$link['url']);
             if ($title) {
                 $name = $title;
             }  
