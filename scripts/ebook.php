@@ -73,6 +73,24 @@
 			
 			$xhtml = $Renderer->doc;
 			$result .= $xhtml;			
+            $R = $Renderer;
+			$result = preg_replace_callback(				
+                     '|<img\s+src=\"(.*?)\"(.*?usemap.*?)>|im',
+				   function($matches)  use($R) {    
+                   if(strpos( $matches[1],'?') !== false) {
+                       list($pre, $img) = explode('=', $matches[1]);
+                   }
+                   else $img =  basename($matches[1]);                 
+               
+                    $name = '../'. $R->copy_media($img);
+                    echo "Map image name = $name\n";
+				//	 echo htmlentities($matches[1]) . "<br />";
+				//	 echo htmlentities($matches[2]) . "<br />";
+                      return '<img src="' . $name . '"' . $matches[2] . '>';
+					},
+					$result
+                   );			
+ 
 			$result .= "\n</div></body></html>\n";		
 			$result =  preg_replace_callback("/&(\w+);/m", "epbub_entity_replace", $result );  				
 			$result = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/m", "\n", $result);	
