@@ -73,6 +73,7 @@
 			
 			$xhtml = $Renderer->doc;
 			$result .= $xhtml;			
+            if(strpos($result, 'usemap') !== false) {			
             $R = $Renderer;
 			$result = preg_replace_callback(				
                      '|<img\s+src=\"(.*?)\"(.*?usemap.*?)>|im',
@@ -84,13 +85,30 @@
                
                     $name = '../'. $R->copy_media($img);
                     echo "Map image name = $name\n";
-				//	 echo htmlentities($matches[1]) . "<br />";
-				//	 echo htmlentities($matches[2]) . "<br />";
                       return '<img src="' . $name . '"' . $matches[2] . '>';
 					},
 					$result
                    );			
+			$result = preg_replace_callback(				
+                     '|<area(.*?)>|im',	
+                   function($matches) {
+					   if(strpos($matches[0], 'http') !== false) return $matches[0];  
+					   echo htmlentities($matches[0]) ."\n";
+					   $rev = preg_replace_callback(
+					      '|href\s*=\s*([\"\'])(.*?)\1|m',
+					      function($m) {
+							  if(stripos($m[0],'javascript:') !== false) {
+								  echo "js\n";
+							  return $m[0];
+							  }
+							  echo $m[0] . "\n";
+						  },$matches[0]);
+					   
+					   return $matches[0];
+				   }, $result
+                  );  				   
  
+            } 
 			$result .= "\n</div></body></html>\n";		
 			$result =  preg_replace_callback("/&(\w+);/m", "epbub_entity_replace", $result );  				
 			$result = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/m", "\n", $result);	
