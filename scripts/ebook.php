@@ -93,19 +93,22 @@
                      '|<area(.*?)>|im',	
                    function($matches) {
 					   if(strpos($matches[0], 'http') !== false) return $matches[0];  
-					   echo htmlentities($matches[0]) ."\n";
-					   $rev = preg_replace_callback(
-					      '|href\s*=\s*([\"\'])(.*?)\1|m',
+					   $matches[0]= preg_replace_callback(
+					      '|href\s*=\s*([\"\'])(.*?)\1|m',     //test $matches[0]
 					      function($m) {
 							  if(stripos($m[0],'javascript:') !== false) {
-								  echo "js\n";
 							  return $m[0];
 							  }
-							  echo $m[0] . "\n";
+                            $patterns = array('!^' . preg_quote(DOKU_BASE) . '!', "/^doku.php/","!^\?\s*id\s*=\s*!");           
+                            $_REQUEST['epubid'] = preg_replace($patterns,  "", $m[2]);
+                            $id = getID('epubid') . '.html' ;   
+                            $id = "../Text/" . str_replace(':','_',$id) ;                        
+                            echo "revised url: " . htmlentities($id)."\n";
+                            return "href='$id'";                            
 						  },$matches[0]);
-					   
 					   return $matches[0];
 				   }, $result
+               
                   );  				   
  
             } 
