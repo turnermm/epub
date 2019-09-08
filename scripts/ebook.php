@@ -73,6 +73,7 @@
 			
 			$xhtml = $Renderer->doc;
 			$result .= $xhtml;			
+            //handle image maps
             if(strpos($result, 'usemap') !== false) {			
             $R = $Renderer;
 			$result = preg_replace_callback(				
@@ -89,15 +90,16 @@
 					},
 					$result
                    );			
+             //Convert internal links to localized epub links      
 			$result = preg_replace_callback(				
                      '|<area(.*?)>|im',	
                    function($matches) {
-					   if(strpos($matches[0], 'http') !== false) return $matches[0];  
+					   if(strpos($matches[0], 'http') !== false) return $matches[0];  	//External link, no conversioon needed				
 					   $matches[0]= preg_replace_callback(
 					      '|href\s*=\s*([\"\'])(.*?)\1|m',     //test $matches[0]
 					      function($m) {
 							  if(stripos($m[0],'javascript:') !== false) {
-							  return $m[0];
+							     return $m[0];   // we do no convert javascript links
 							  }
                             $patterns = array('!^' . preg_quote(DOKU_BASE) . '!', "/^doku.php/","!^\?\s*id\s*=\s*!");           
                             $_REQUEST['epubid'] = preg_replace($patterns,  "", $m[2]);
