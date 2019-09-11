@@ -85,7 +85,7 @@ function epub_css_out($path)
 
 
 $xcl = 'plugins/popularity|usermanager |plugins/upgrade|plugins/acl|plugins/plugin|plugins/auth|plugins/config|plugins/revert|_imgdetail.css'
-. '|plugins/fckg|plugins/ckgedit' 
+. '|plugins/fckg|plugins/ckgedit|plugins/edittable' 
 . '|_media_popup.css|_media_fullscreen.css|_fileuploader.css|_toc.css|_search.css|_recent.css|_diff.css|_edit.css|_forms.css|_admin.css';
 
 
@@ -126,10 +126,10 @@ $xcl = 'plugins/popularity|usermanager |plugins/upgrade|plugins/acl|plugins/plug
 
 
     // embed small images right into the stylesheet
-    if($conf['cssdatauri']){
-        $base = preg_quote(DOKU_BASE,'#');
-        $css = preg_replace_callback('#(url\([ \'"]*)('.$base.')(.*?(?:\.(png|gif)))#i','css_datauri',$css);
-    }
+   // if($conf['cssdatauri']){
+      //  $base = preg_quote(DOKU_BASE,'#');
+       // $css = preg_replace_callback('#(url\([ \'"]*)('.$base.')(.*?(?:\.(png|gif)))#i','css_datauri',$css);
+    //}
 
   io_saveFile($path . 'Styles/style.css' ,$css);
 }
