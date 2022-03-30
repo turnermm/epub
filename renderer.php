@@ -369,7 +369,7 @@
 				if($this->isWin) {
 				    $elems=explode('\\',$tmp);                       
 				}
-                if(count($elems && $elems[0])) {
+                if(!empty($elems) && $elems[0]) {
                     $elems[0] = preg_replace('#/\W#','_',$elems[0]);
                     $name = $elems[0]. "_" . $name;
                 }
