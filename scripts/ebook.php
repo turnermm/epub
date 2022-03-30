@@ -120,12 +120,11 @@
 			$result = preg_replace("/^\s+/m", "", $result );  				
 			$result = preg_replace_callback(
 			                          '|<p>([\s\n]*)(.*?<div.*?/div>.*?)([\s\n])*<\/p>|im',
-									   create_function(
-											'$matches',
-											'$result = $matches[1] . $matches[2] . $matches[3];
+									   function($matches) {
+											$result = $matches[1] . $matches[2] . $matches[3];
 											//echo "$result\n";
-											return $result;'
-										),
+											return $result;
+										},
 										$result
                             );
 
