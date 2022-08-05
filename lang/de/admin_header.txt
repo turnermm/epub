@@ -1,3 +1,4 @@
 ===== Anleitung =====
-Durch die Benutzung dieses Tools, kannst du Einträge aus dem epub-Cache entfernen und wahlweise auch die assoziierten eBooks aus dem Media-Ordner.
-Wähle einen oder mehrere Titel aus. Durch einen Klick auf den **Nur Cache** Button, werden diese Titel aus dem Cache entfernt. Durch einen Klick auf den **Cache und eBook(s)** Button, werden sowohl die Bücher aus dem Cache, als auch die assoziierten eBooks aus dem Media-Ordner entfernt. Letzteres funktioniert nur, wenn die epub-Dateien intakt auf dem Server vorhanden sind. 
+Mit diesem Werkzeug können Sie Einträge aus dem epub-Cache entfernen und wahlweise auch die zugehörigen eBooks aus dem Media-Ordner löschen. 
+Wählen Sie einen oder mehrere Titel aus. Durch einen Klick auf den **Nur Cache** Knopf werden diese Titel aus dem Cache entfernt. 
+Durch einen Klick auf den **Cache und eBook(s)** Knopf werden sowohl die Bücher aus dem Cache als auch die assoziierten eBooks aus dem Media-Ordner entfernt. Letzteres funktioniert nur, wenn die epub-Dateien komplett auf dem Server vorhanden sind. 
