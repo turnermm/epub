@@ -91,7 +91,7 @@
 		/**
 			* Simplified header printing with PDF bookmarks
 		*/
-		function header($text, $level, $pos) {
+		function header($text, $level, $pos, $readonly=false) {
 			if(!$text) return; //skip empty headlines
 		    $hid = $this->_headerToLink($text, true);	           
 			// print header
