@@ -84,7 +84,7 @@ class helper_plugin_epub extends Dokuwiki_Plugin {
        global $conf;   
        $data = wikiFN($id).$_SERVER['HTTP_HOST'].$_SERVER['SERVER_PORT'];
        $_md5=md5($data);  
-       $file = $conf['cachedir'].'/'.$_md5{0}.'/'.$_md5;
+       $file = $conf['cachedir'].'/'.$_md5[0].'/'.$_md5;
        $types = array('metadata','i','xhtml');
        foreach ($types as $type) {
           $name = $file . ".$type";
